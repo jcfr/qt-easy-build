@@ -30,10 +30,7 @@ Windows
 -------
 
 1. Open desired Visual Studio Command Prompt
-2. Paste the text from the box below
-3. Change 'buildType' to either 'Release' or 'Debug'
-4. Change 'bits' to either '32' or '64' to match your Visual Studio Prompt
-5. and press enter.
+2. Paste the corresponding text from the box below and press enter.
 
 * Visual Studio 2010 64-bit Release
 
@@ -59,4 +56,8 @@ Windows
 @powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2008';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw2.github.com/jcfr/qt-easy-build/master/windows_build_qt.ps1'))"
 ```
 
-Note that this script will install [jom](http://qt-project.org/wiki/jom) and [StrawberryPerl](http://strawberryperl.com/) using `cinst jom` and `cinst StrawberryPerl`.
+### Notes ###
+
+* `buildType` can be set to either 'Release' or 'Debug'
+* `bits` can be set to either '32' or '64'
+* The script will install [jom](http://qt-project.org/wiki/jom) and [StrawberryPerl](http://strawberryperl.com/) using `cinst jom` and `cinst StrawberryPerl`.
