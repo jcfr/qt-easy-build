@@ -136,21 +136,47 @@ _extract_archive(${QT_FILE} ${QT_BUILD_DIR})
 _extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
 
 # Configure Qt
-
-execute_process(
-  COMMAND ${QT_BUILD_DIR}/configure.exe
-    -opensource -confirm-license
-    -platform ${QT_PLATFORM} -${qt_build_type}
-    -webkit
-    -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
-    -nomake examples
-    -nomake demos
-  WORKING_DIRECTORY ${QT_BUILD_DIR}
-  )
+set(msg "Configuring Qt")
+set(step_file "${QT_BUILD_DIR}.configure.ok")
+message(STATUS "${msg}")
+if(NOT EXISTS ${step_file})
+  execute_process(
+    COMMAND ${QT_BUILD_DIR}/configure.exe
+      -opensource -confirm-license
+      -platform ${QT_PLATFORM} -${qt_build_type}
+      -webkit
+      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
+      -nomake examples
+      -nomake demos
+    WORKING_DIRECTORY ${QT_BUILD_DIR}
+    RESULT_VARIABLE result_var
+    )
+  if(result_var EQUAL 0)
+    file(WRITE ${step_file} "")
+    message(STATUS "${msg} - ok")
+  else()
+    message(FATAL_ERROR "${msg} - error")
+  endif()
+else()
+  message(STATUS "${msg} - already done")
+endif()
 
 # Build Qt
-message(STATUS "Build Qt")
-execute_process(
-  COMMAND ${JOM_EXECUTABLE} -j4
-  WORKING_DIRECTORY ${QT_BUILD_DIR}
-  )
+set(msg "Building Qt")
+set(step_file "${QT_BUILD_DIR}.build.ok")
+message(STATUS "${msg}")
+if(NOT EXISTS ${step_file})
+  execute_process(
+    COMMAND ${JOM_EXECUTABLE} -j4
+    WORKING_DIRECTORY ${QT_BUILD_DIR}
+    RESULT_VARIABLE result_var
+    )
+  if(result_var EQUAL 0)
+    file(WRITE ${step_file} "")
+    message(STATUS "${msg} - ok")
+  else()
+    message(FATAL_ERROR "${msg} - error")
+  endif()
+else()
+  message(STATUS "${msg} - already done")
+endif()
