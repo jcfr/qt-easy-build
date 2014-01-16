@@ -1,5 +1,4 @@
 
-
 message(STATUS "---------------------------------")
 
 # Set default for value for script options
