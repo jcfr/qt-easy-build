@@ -57,6 +57,8 @@ message(STATUS "OPENSSL_LIB_DIR: ${OPENSSL_LIB_DIR}")
 get_filename_component(_archive_name ${QT_URL} NAME)
 set(QT_FILE "${DEST_DIR}/${_archive_name}")
 message(STATUS "QT_BUILD_DIR: ${QT_BUILD_DIR}")
+find_program(JOM_EXECUTABLE jom.bat jom.exe)
+message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 message(STATUS "---------------------------------")
 
@@ -147,11 +149,8 @@ execute_process(
   )
 
 # Build Qt
-find_program(MAKE_EXECUTABLE jom)
-if(NOT MAKE_EXECUTABLE)
-  find_program(MAKE_EXECUTABLE make)
-endif()
+message(STATUS "Build Qt")
 execute_process(
-  COMMAND ${MAKE_EXECUTABLE} -j4
+  COMMAND ${JOM_EXECUTABLE} -j4
   WORKING_DIRECTORY ${QT_BUILD_DIR}
   )
