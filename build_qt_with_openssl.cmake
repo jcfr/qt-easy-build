@@ -1,0 +1,137 @@
+
+
+message(STATUS "---------------------------------")
+
+# Set default for value for script options
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+  message(STATUS "Setting build type to '${CMAKE_BUILD_TYPE}' as none was specified.")
+endif()
+
+# Sanity checks
+if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Release)$")
+  message(FATAL_ERROR "CMAKE_BUILD_TYPE incorrectly set to [${CMAKE_BUILD_TYPE}].
+Hint: 'Release' or 'Debug' value is expected.")
+endif()
+
+
+set(DEST_DIR "C:/D/Support2")
+set(OPENSSL_URL "http://packages.kitware.com/download/item/3876/OpenSSL_1_0_1e-install-64.tar.gz")
+set(QT_URL "http://download.qt-project.org/official_releases/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.zip")
+string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
+string(SUBSTRING ${qt_build_type} 0 3 _short_build_type)
+set(QT_BUILD_DIR "${DEST_DIR}/qt-4.8.5-64-vs2010-${_short_build_type}")
+set(QT_PLATFORM "win32-msvc2010")
+
+# Set OpenSSL variables
+get_filename_component(_archive_name ${OPENSSL_URL} NAME)
+set(OPENSSL_FILE ${DEST_DIR}/${_archive_name})
+string(REGEX REPLACE "(\\.|=)(bz2|tar\\.gz|tgz|zip)$" "" _archive_basename "${_archive_name}")
+set(OPENSSL_INSTALL_DIR ${DEST_DIR}/${_archive_basename})
+set(OPENSSL_INCLUDE_DIR "${OPENSSL_INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include")
+set(OPENSSL_LIB_DIR "${OPENSSL_INSTALL_DIR}/${CMAKE_BUILD_TYPE}/lib")
+message(STATUS "OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}")
+message(STATUS "OPENSSL_LIB_DIR: ${OPENSSL_LIB_DIR}")
+
+# Set Qt variables
+get_filename_component(_archive_name ${QT_URL} NAME)
+set(QT_FILE "${DEST_DIR}/${_archive_name}")
+message(STATUS "QT_BUILD_DIR: ${QT_BUILD_DIR}")
+
+message(STATUS "---------------------------------")
+
+if(NOT EXISTS ${DEST_DIR})
+  message(STATUS "making dir='${DEST_DIR}'")
+  file(MAKE_DIRECTORY ${DEST_DIR})
+endif()
+
+function(_download_file remote local)
+  if(NOT EXISTS ${local})
+    message(STATUS "downloading...\n  src='${remote}'\n  dst='${local}")
+    file(DOWNLOAD "${remote}" "${local}" SHOW_PROGRESS)
+  endif()
+endfunction()
+
+_download_file(${QT_URL} ${QT_FILE})
+_download_file(${OPENSSL_URL} ${OPENSSL_FILE})
+
+# Adapted from '_ep_write_extractfile_script' available in ExternalProject.cmake
+function(_extract_archive filename directory)
+  message(STATUS "extracting...\n  src='${filename}'\n  dst='${directory}'")
+  if(NOT EXISTS "${filename}")
+    message(FATAL_ERROR "error: file to extract does not exist: '${filename}'")
+  endif()
+  
+  if(EXISTS ${directory})
+    return()
+  endif()
+
+  # Prepare a space for extracting:
+  get_filename_component(name ${filename} NAME)
+  set(i 1234)
+  while(EXISTS "${directory}/../ex-${name}${i}")
+    math(EXPR i "${i} + 1")
+  endwhile()
+  set(ut_dir "${directory}/../ex-${name}${i}")
+  file(MAKE_DIRECTORY "${ut_dir}")
+
+  # Extract it:
+  set(args "xfz")
+  message(STATUS "extracting... [tar ${args}]")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar ${args} ${filename}
+    WORKING_DIRECTORY ${ut_dir}
+    RESULT_VARIABLE rv)
+
+  if(NOT rv EQUAL 0)
+    message(STATUS "extracting... [error clean up]")
+    file(REMOVE_RECURSE "${ut_dir}")
+    message(FATAL_ERROR "error: extract of '${filename}' failed")
+  endif()
+
+  # Analyze what came out of the tar file:
+  message(STATUS "extracting... [analysis]")
+  file(GLOB contents "${ut_dir}/*")
+  list(LENGTH contents n)
+  if(NOT n EQUAL 1 OR NOT IS_DIRECTORY "${contents}")
+    set(contents "${ut_dir}")
+  endif()
+
+  # Move "the one" directory to the final directory:
+  message(STATUS "extracting... [rename]")
+  file(REMOVE_RECURSE ${directory})
+  get_filename_component(contents ${contents} ABSOLUTE)
+  file(RENAME ${contents} ${directory})
+
+  # Clean up:
+  message(STATUS "extracting... [clean up]")
+  file(REMOVE_RECURSE "${ut_dir}")
+
+  message(STATUS "extracting... done")
+endfunction()
+
+# Extract packages.
+_extract_archive(${QT_FILE} ${QT_BUILD_DIR})
+_extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
+
+# Configure Qt
+
+execute_process(
+  COMMAND ${QT_BUILD_DIR}/configure.exe
+    -opensource -confirm-license
+    -platform ${QT_PLATFORM} -${qt_build_type}
+    -webkit
+    -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
+    -nomake examples
+    -nomake demos
+  WORKING_DIRECTORY ${QT_BUILD_DIR}
+  )
+
+# Build Qt
+find_program(MAKE_EXECUTABLE jom)
+if(NOT MAKE_EXECUTABLE)
+  find_program(MAKE_EXECUTABLE make)
+endif()
+execute_process(
+  COMMAND ${MAKE_EXECUTABLE} -j4
+  WORKING_DIRECTORY ${QT_BUILD_DIR}
+  )
