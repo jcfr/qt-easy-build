@@ -13,9 +13,10 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Release)$")
   message(FATAL_ERROR "CMAKE_BUILD_TYPE incorrectly set to [${CMAKE_BUILD_TYPE}].
 Hint: 'Release' or 'Debug' value is expected.")
 endif()
+if(NOT DEST_DIR)
+  message(FATAL_ERROR "DEST_DIR has not been set !")
+endif()
 
-
-set(DEST_DIR "C:/D/Support2")
 set(OPENSSL_URL "http://packages.kitware.com/download/item/3876/OpenSSL_1_0_1e-install-64.tar.gz")
 set(QT_URL "http://download.qt-project.org/official_releases/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.zip")
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
