@@ -15,13 +15,33 @@ endif()
 if(NOT DEST_DIR)
   message(FATAL_ERROR "DEST_DIR has not been set !")
 endif()
+if(NOT QT_PLATFORM)
+  message(FATAL_ERROR "QT_PLATFORM has not been set !")
+endif()
+if(NOT BITS MATCHES "^(32|64)$")
+  message(FATAL_ERROR "BITS incorrectly set to [${BITS}].
+Hint: '32' or '64' value is expected.")
+endif()
 
-set(OPENSSL_URL "http://packages.kitware.com/download/item/3876/OpenSSL_1_0_1e-install-64.tar.gz")
+# Set compiler name based on Qt platform
+if(QT_PLATFORM STREQUAL "win32-msvc2010")
+  set(_compiler_name "vs2010")
+elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
+  set(_compiler_name "vs2008")
+else()
+  message(FATAL_ERROR "Specified QT_PLATFORM:${QT_PLATFORM} is not supported !")
+endif()
+
+
+if(BITS EQUAL 64)
+  set(OPENSSL_URL "http://packages.kitware.com/download/item/3876/OpenSSL_1_0_1e-install-64.tar.gz")
+else()
+  set(OPENSSL_URL "http://packages.kitware.com/download/item/3877/OpenSSL_1_0_1e-install-32.tar.gz")
+endif()
 set(QT_URL "http://download.qt-project.org/official_releases/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.zip")
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
 string(SUBSTRING ${qt_build_type} 0 3 _short_build_type)
-set(QT_BUILD_DIR "${DEST_DIR}/qt-4.8.5-64-vs2010-${_short_build_type}")
-set(QT_PLATFORM "win32-msvc2010")
+set(QT_BUILD_DIR "${DEST_DIR}/qt-4.8.5-${BITS}-${_compiler_name}-${_short_build_type}")
 
 # Set OpenSSL variables
 get_filename_component(_archive_name ${OPENSSL_URL} NAME)

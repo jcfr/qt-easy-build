@@ -6,6 +6,12 @@ if(!$destDir){
 if(!($buildType -match "^(Debug|Release)$")){
   throw "'buildType' variable incorrectly set to [$buildType]. Hint: 'Release' or 'Debug' value is expected."
 }
+if(!$qtPlatform){
+  throw "'qtPlatform' variable not set."
+}
+if(!($bits -match "^(32|64)$")){
+  throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
+}
 
 $qtBuildScriptVersion = '53af124b46e6aade989b1bbecbcb8885a11d705c'
 
@@ -57,6 +63,8 @@ pushd $destDir
 Start-Process "$cmake" -ArgumentList `
   "-DCMAKE_BUILD_TYPE:STRING=$buildType",`
   "-DDEST_DIR:PATH=$destDir",`
+  "-DQT_PLATFORM:STRING=$qtPlatform",`
+  "-DBITS:STRING=$bits",`
   "-P", "$qtBuildScriptFile"`
   -NoNewWindow -PassThru -Wait
 
