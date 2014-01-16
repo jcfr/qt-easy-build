@@ -60,17 +60,28 @@ message(STATUS "QT_BUILD_DIR: ${QT_BUILD_DIR}")
 find_program(JOM_EXECUTABLE jom.bat jom.exe)
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
-message(STATUS "---------------------------------")
-
 if(NOT EXISTS ${DEST_DIR})
   message(STATUS "making dir='${DEST_DIR}'")
   file(MAKE_DIRECTORY ${DEST_DIR})
 endif()
 
 function(_download_file remote local)
-  if(NOT EXISTS ${local})
-    message(STATUS "downloading...\n  src='${remote}'\n  dst='${local}")
-    file(DOWNLOAD "${remote}" "${local}" SHOW_PROGRESS)
+  message(STATUS "---------------------------------")
+  set(msg "downloading...")
+  set(step_file "${local}.download.ok")
+  message(STATUS "downloading...\n  src='${remote}'\n  dst='${local}")
+  if(NOT EXISTS ${step_file})
+    file(DOWNLOAD "${remote}" "${local}" SHOW_PROGRESS STATUS status)
+    list(GET status 0 error_code)
+    list(GET status 1 error_msg)
+    if(NOT error_code)
+      file(WRITE ${step_file} "")
+      message(STATUS "${msg} - ok")
+    else()
+      message(STATUS "${msg} - error")
+    endif()
+  else()
+    message(STATUS "${msg} - already done")
   endif()
 endfunction()
 
@@ -79,12 +90,16 @@ _download_file(${OPENSSL_URL} ${OPENSSL_FILE})
 
 # Adapted from '_ep_write_extractfile_script' available in ExternalProject.cmake
 function(_extract_archive filename directory)
+  message(STATUS "---------------------------------")
   message(STATUS "extracting...\n  src='${filename}'\n  dst='${directory}'")
   if(NOT EXISTS "${filename}")
     message(FATAL_ERROR "error: file to extract does not exist: '${filename}'")
   endif()
+
+  set(step_file "${directory}.extract.ok")
   
-  if(EXISTS ${directory})
+  if(EXISTS ${step_file})
+    message(STATUS "extracting - already done")
     return()
   endif()
 
@@ -128,7 +143,8 @@ function(_extract_archive filename directory)
   message(STATUS "extracting... [clean up]")
   file(REMOVE_RECURSE "${ut_dir}")
 
-  message(STATUS "extracting... done")
+  file(WRITE "${step_file}" "")
+  message(STATUS "extracting... - done")
 endfunction()
 
 # Extract packages.
@@ -138,6 +154,7 @@ _extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
 # Configure Qt
 set(msg "Configuring Qt")
 set(step_file "${QT_BUILD_DIR}.configure.ok")
+message(STATUS "---------------------------------")
 message(STATUS "${msg}")
 if(NOT EXISTS ${step_file})
   execute_process(
@@ -164,6 +181,7 @@ endif()
 # Build Qt
 set(msg "Building Qt")
 set(step_file "${QT_BUILD_DIR}.build.ok")
+message(STATUS "---------------------------------")
 message(STATUS "${msg}")
 if(NOT EXISTS ${step_file})
   execute_process(
