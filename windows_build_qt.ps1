@@ -1,4 +1,3 @@
-
 # Sanity checks
 if(!$destDir){
   throw "'destDir' variable not set."
@@ -13,7 +12,7 @@ if(!($bits -match "^(32|64)$")){
   throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
 }
 
-$qtBuildScriptVersion = '826cae7227aee66cacf9e7a2198aabb41e384fca'
+$qtBuildScriptVersion = '8b275e84c696512820ae99bd1501a6cbb9a7bbc3'
 
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
 
