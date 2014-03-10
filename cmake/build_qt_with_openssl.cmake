@@ -1,4 +1,3 @@
-
 message(STATUS "---------------------------------")
 
 # Set default for value for script options
@@ -160,6 +159,7 @@ if(NOT EXISTS ${step_file})
   execute_process(
     COMMAND ${QT_BUILD_DIR}/configure.exe
       -opensource -confirm-license
+      -shared
       -platform ${QT_PLATFORM} -${qt_build_type}
       -webkit
       -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
