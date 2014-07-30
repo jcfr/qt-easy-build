@@ -55,7 +55,13 @@ $cmake = Join-Path $cmakeInstallDir 'bin\cmake.exe'
 # download cross-platform build script
 $qtBuildScriptName = 'build_qt_with_openssl.cmake'
 $qtBuildScriptFile = Join-Path $destDir $qtBuildScriptName
-Download-File ('https://raw2.github.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName) $qtBuildScriptFile
+If (Test-Path $qtBuildScriptFile)
+  {
+  Remove-Item $qtBuildScriptFile
+  }
+$url = ('https://raw2.github.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
+Write-Host "Download $url"
+Download-File $url $qtBuildScriptFile
 
 pushd $destDir
 
