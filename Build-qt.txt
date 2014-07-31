@@ -10,6 +10,7 @@ cmake=/home/kitware/Dashboards/Support/cmake-2.8.10.2-Linux-i386/bin/cmake
 
 cwd=$(pwd)
 
+rm -rf zlib* && \
 mkdir zlib-install  && \
 mkdir zlib-build  && \
 git clone git://github.com/commontk/zlib.git  && \
@@ -26,9 +27,14 @@ cd ..
 
 cwd=$(pwd)
 
-wget http://www.openssl.org/source/openssl-1.0.1e.tar.gz && \
-tar -xzvf openssl-1.0.1e.tar.gz && \
-cd openssl-1.0.1e/  && \
+rm -f openssl-1.0.1h.tar.gz && \
+rm -rf openssl-1.0.1h/ && \
+wget http://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
+md5=`md5sum ./openssl-1.0.1h.tar.gz | awk '{ print $1 }'` &&
+[ $md5 == "8d6d684a9430d5cc98a62a5d8fbda8cf" ] ||
+  ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
+tar -xzvf openssl-1.0.1h.tar.gz && \
+cd openssl-1.0.1h/  && \
 ./config zlib -lzlib -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
 cd ..
@@ -38,15 +44,20 @@ cd ..
 
 cwd=$(pwd)
 
-mkdir qt/qt-everywhere-opensource-build-4.8.5 && \
 cd qt && \
-tar -xzvf qt-everywhere-opensource-src-4.8.5.tar.gz && \
-cd qt-everywhere-opensource-src-4.8.5 && \
-./configure -prefix ../qt-everywhere-opensource-build-4.8.5/  \
+rm -rf qt-everywhere-opensource-src-4.8.6 && \
+rm -rf qt-everywhere-opensource-build-4.8.6 && \
+mkdir qt-everywhere-opensource-build-4.8.6 && \
+md5=`md5sum ./qt-everywhere-opensource-src-4.8.6.tar.gz | awk '{ print $1 }'` &&
+[ $md5 == "2edbe4d6c2eff33ef91732602f3518eb" ] ||
+  ( echo "MD5 mismatch. Problem downloading Qt" ; exit 1; ) &&
+tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz && \
+cd qt-everywhere-opensource-src-4.8.6 && \
+./configure -prefix ../qt-everywhere-opensource-build-4.8.6/  \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -nomake examples -nomake demos                      \
-  -openssl -I $cwd/openssl-1.0.1e/include \
-  -L $cwd/openssl-1.0.1e && \
+  -openssl -I $cwd/openssl-1.0.1h/include \
+  -L $cwd/openssl-1.0.1h && \
 make -j7 && \
 make install
 
@@ -59,23 +70,24 @@ make install
 
 # Prerequisites
 
-#cmake=/Users/kitware/Dashboards/Support/CMake\ 2.8-10.app/Contents/bin/cmake
-#deployment_target=10.6
-#sysroot=/Developer/SDKs/MacOSX10.6.sdk
+cmake=/Users/kitware/Dashboards/Support/CMake\ 2.8-12.app/Contents/bin/cmake
+deployment_target=10.6
+sysroot=/Developer/SDKs/MacOSX10.6.sdk
 
-cmake=/Volumes/Dashboards/Support/CMake\ 2.8-11.app/Contents/bin/cmake
-deployment_target=10.8
-sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+#cmake=/Volumes/Dashboards/Support/CMake\ 2.8-11.app/Contents/bin/cmake
+#deployment_target=10.8
+#sysroot=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
 
 # Build zlib
 
 cwd=$(pwd)
 
+rm -rf zlib* && \
 mkdir zlib-install  && \
 mkdir zlib-build  && \
 git clone git://github.com/commontk/zlib.git  && \
 cd zlib-build  && \
-$cmake -DCMAKE_BUILD_TYPE:STRING=Release \
+"$cmake" -DCMAKE_BUILD_TYPE:STRING=Release \
        -DZLIB_MANGLE_PREFIX:STRING=slicer_zlib_ \
        -DCMAKE_INSTALL_PREFIX:PATH=$cwd/zlib-install \
        -DCMAKE_OSX_ARCHITECTURES=x86_64 \
@@ -90,16 +102,21 @@ cd ..
 
 cwd=$(pwd)
 
-curl -O http://www.openssl.org/source/openssl-1.0.1e.tar.gz && \
-tar -xzvf openssl-1.0.1e.tar.gz && \
-cd openssl-1.0.1e/  && \
+rm -f openssl-1.0.1h.tar.gz && \
+rm -rf openssl-1.0.1h/ && \
+curl -O http://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
+tar -xzvf openssl-1.0.1h.tar.gz && \
+md5=`md5 ./openssl-1.0.1h.tar.gz | awk '{ print $4 }'` &&
+[ $md5 == "8d6d684a9430d5cc98a62a5d8fbda8cf" ] ||
+  ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
+cd openssl-1.0.1h/  && \
 export KERNEL_BITS=64 && \
 ./config zlib -lzlib -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
-install_name_tool -id $cwd/openssl-1.0.1e/libcrypto.dylib $cwd/openssl-1.0.1e/libcrypto.dylib && \
+install_name_tool -id $cwd/openssl-1.0.1h/libcrypto.dylib $cwd/openssl-1.0.1h/libcrypto.dylib && \
 install_name_tool \
-          -change /usr/local/ssl/lib/libcrypto.1.0.0.dylib $cwd/openssl-1.0.1e/libcrypto.dylib \
-          -id $cwd/openssl-1.0.1e/libssl.dylib $cwd/openssl-1.0.1e/libssl.dylib && \
+          -change /usr/local/ssl/lib/libcrypto.1.0.0.dylib $cwd/openssl-1.0.1h/libcrypto.dylib \
+          -id $cwd/openssl-1.0.1h/libssl.dylib $cwd/openssl-1.0.1h/libssl.dylib && \
 cd ..
 
 
@@ -107,15 +124,19 @@ cd ..
 
 cwd=$(pwd)
 
-mkdir qt-everywhere-opensource-build-4.8.5 && \
-tar -xvf qt-everywhere-opensource-src-4.8.5.tar && \
-cd qt-everywhere-opensource-src-4.8.5 && \
-./configure -prefix ../qt-everywhere-opensource-build-4.8.5/  \
+rm -rf qt-everywhere-opensource-src-4.8.6 && \
+rm -rf qt-everywhere-opensource-build-4.8.6 && \
+mkdir qt-everywhere-opensource-build-4.8.6 && \
+md5=`md5 ./qt-everywhere-opensource-src-4.8.6.tar.gz | awk '{ print $4 }'` &&
+[ $md5 == "2edbe4d6c2eff33ef91732602f3518eb" ] ||
+  ( echo "MD5 mismatch. Problem downloading Qt" ; exit 1; ) &&
+tar -xzvf qt-everywhere-opensource-src-4.8.6.tar.gz && \
+cd qt-everywhere-opensource-src-4.8.6 && \
+./configure -prefix ../qt-everywhere-opensource-build-4.8.6/  \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -arch x86_64  -nomake examples -nomake demos        \
   -sdk $sysroot                         \
-  -openssl -I $cwd/openssl-1.0.1e/include \
-  -L $cwd/openssl-1.0.1e && \
+  -openssl -I $cwd/openssl-1.0.1h/include \
+  -L $cwd/openssl-1.0.1h && \
 make -j7 && \
 make install
-
