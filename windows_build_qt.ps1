@@ -12,7 +12,7 @@ if(!($bits -match "^(32|64)$")){
   throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
 }
 
-$qtBuildScriptVersion = '8b275e84c696512820ae99bd1501a6cbb9a7bbc3'
+$qtBuildScriptVersion = '789d35d6bc3dd2bd150594f27bf401ae2925ebe2'
 
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
 
@@ -68,6 +68,3 @@ Start-Process "$cmake" -ArgumentList `
   -NoNewWindow -PassThru -Wait
 
 popd
-
-
-
