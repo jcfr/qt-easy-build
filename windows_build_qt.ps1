@@ -59,7 +59,7 @@ If (Test-Path $qtBuildScriptFile)
   {
   Remove-Item $qtBuildScriptFile
   }
-$url = ('https://raw2.github.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
 Write-Host "Download $url"
 Download-File $url $qtBuildScriptFile
 
