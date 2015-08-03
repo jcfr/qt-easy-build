@@ -34,22 +34,29 @@ Windows
 1. Open desired Visual Studio Command Prompt
 2. Paste the corresponding text from the box below and press enter.
 
+* Visual Studio 2013 64-bit Release
+
+```PowerShell
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2013';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.6/windows_build_qt.ps1'))"
+```
+
+* Visual Studio 2013 64-bit Debug
+
+```PowerShell
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2013';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.6/windows_build_qt.ps1'))"
+```
+
 * Visual Studio 2012 64-bit Release
 
 ```PowerShell
 @powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2012';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.6/windows_build_qt.ps1'))"
 ```
 
-Note: Qt source have to be [manually patched.](http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Developers/Build_Instructions/Prerequisites/Qt#Qt_4.8.6_.2F_VS2012)
-
 * Visual Studio 2012 64-bit Debug
 
 ```PowerShell
 @powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2012';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.6/windows_build_qt.ps1'))"
 ```
-
-Note: Qt source have to be [manually patched.](http://www.slicer.org/slicerWiki/index.php/Documentation/Nightly/Developers/Build_Instructions/Prerequisites/Qt#Qt_4.8.6_.2F_VS2012)
-
 
 * Visual Studio 2010 64-bit Release
 
