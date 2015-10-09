@@ -44,7 +44,6 @@ cd ..
 
 cwd=$(pwd)
 
-cd qt && \
 rm -f qt-everywhere-opensource-src-4.8.7.tar.gz
 rm -rf qt-everywhere-opensource-src-4.8.7 && \
 rm -rf qt-everywhere-opensource-build-4.8.7 && \
