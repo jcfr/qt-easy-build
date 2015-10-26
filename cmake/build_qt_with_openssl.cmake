@@ -88,7 +88,16 @@ message(STATUS "OPENSSL_LIB_DIR: ${OPENSSL_LIB_DIR}")
 get_filename_component(_archive_name ${QT_URL} NAME)
 set(QT_FILE "${DEST_DIR}/${_archive_name}")
 message(STATUS "QT_BUILD_DIR: ${QT_BUILD_DIR}")
-find_program(JOM_EXECUTABLE jom)
+set(ChocolateyInstall_DIR $ENV{ChocolateyInstall})
+if(NOT EXISTS "${ChocolateyInstall_DIR}")
+  message(FATAL_ERROR "Could not find the ChocolateyInstall environment variable."
+    " Something must have gone wrong with the chocolatey installation."
+    " Aborting.")
+  return()
+endif()
+# Use the jom the original jom, not the chocolatey one. The latter does not work.
+find_program(JOM_EXECUTABLE jom
+  HINTS ${ChocolateyInstall_DIR}/lib/jom/content)
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 if(NOT EXISTS ${DEST_DIR})
