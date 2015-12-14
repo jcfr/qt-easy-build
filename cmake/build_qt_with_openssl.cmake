@@ -95,9 +95,13 @@ if(NOT EXISTS "${ChocolateyInstall_DIR}")
     " Aborting.")
   return()
 endif()
-# Use the jom the original jom, not the chocolatey one. The latter does not work.
+# Lookup paths to the original jom, not the chocolatey one.
+# The latter does not work. See PR #11
+set(ChocolateyInstall_LIB_DIR ${ChocolateyInstall_DIR}/lib)
+file(GLOB jom_paths "${ChocolateyInstall_LIB_DIR}/jom*")
+list(GET jom_paths 0 jom_path)
 find_program(JOM_EXECUTABLE jom
-  HINTS ${ChocolateyInstall_DIR}/lib/jom/content)
+  HINTS ${jom_path}/content)
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 if(NOT EXISTS ${DEST_DIR})
