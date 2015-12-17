@@ -173,50 +173,30 @@ _extract_archive(${QT_FILE} ${QT_BUILD_DIR})
 _extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
 
 # Configure Qt
-set(msg "Configuring Qt")
-set(step_file "${QT_BUILD_DIR}.configure.ok")
-message(STATUS "---------------------------------")
-message(STATUS "${msg}")
-if(NOT EXISTS ${step_file})
-  execute_process(
-    COMMAND ${QT_BUILD_DIR}/configure.exe
-      -opensource -confirm-license
-      -shared
-      -platform ${QT_PLATFORM} -${qt_build_type}
-      -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
-      -nomake examples
-      -nomake demos
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
-  if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
-    message(STATUS "${msg} - ok")
-  else()
-    message(FATAL_ERROR "${msg} - error")
-  endif()
-else()
-  message(STATUS "${msg} - already done")
+execute_process(
+  COMMAND ${CMAKE_COMMAND}
+    -DMODE=configure
+    -DQT_PLATFORM=${QT_PLATFORM}
+    -DQT_BUILD_TYPE=${qt_build_type}
+    -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+    -DOPENSSL_LIB_DIR=${OPENSSL_LIB_DIR}
+    -DQT_BUILD_DIR=${QT_BUILD_DIR}
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+  RESULT_VARIABLE result_var
+  )
+if(NOT result_var EQUAL 0)
+  message(FATAL_ERROR "")
 endif()
 
 # Build Qt
-set(msg "Building Qt")
-set(step_file "${QT_BUILD_DIR}.build.ok")
-message(STATUS "---------------------------------")
-message(STATUS "${msg}")
-if(NOT EXISTS ${step_file})
-  execute_process(
-    COMMAND ${JOM_EXECUTABLE} -j4
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
-  if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
-    message(STATUS "${msg} - ok")
-  else()
-    message(FATAL_ERROR "${msg} - error")
-  endif()
-else()
-  message(STATUS "${msg} - already done")
+execute_process(
+  COMMAND ${CMAKE_COMMAND}
+    -DMODE=build
+    -DQT_BUILD_DIR=${QT_BUILD_DIR}
+    -DJOM_EXECUTABLE=${JOM_EXECUTABLE}
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+  RESULT_VARIABLE result_var
+  )
+if(NOT result_var EQUAL 0)
+  message(FATAL_ERROR "")
 endif()
