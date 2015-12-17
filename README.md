@@ -86,4 +86,4 @@ Windows
 
 * `buildType` can be set to either 'Release' or 'Debug'
 * `bits` can be set to either '32' or '64'
-* The script will install [jom](http://qt-project.org/wiki/jom) and [StrawberryPerl](http://strawberryperl.com/) using `cinst jom` and `cinst StrawberryPerl`.
+* The script will install [jom](http://qt-project.org/wiki/jom) using `cinst jom`.

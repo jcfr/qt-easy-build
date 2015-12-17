@@ -17,7 +17,6 @@ $qtBuildScriptVersion = '2749ce14edbded661e7eac61fb3382132c1c89de'
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
 
 cinst jom
-cinst StrawberryPerl
 
 function Download-File {
 param (
