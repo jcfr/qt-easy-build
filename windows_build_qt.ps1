@@ -68,6 +68,12 @@ $qtBuildScriptFile = Join-Path $destDir $qtBuildScriptName
 $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
 Always-Download-File $url $qtBuildScriptFile
 
+# download cross-platform helper script(s)
+$scriptName = 'QEBGetOpenSSLBinariesDownloadURL.cmake'
+$scriptFile = Join-Path $destDir $scriptName
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+Always-Download-File $url $scriptFile
+
 pushd $destDir
 
 Start-Process "$cmake" -ArgumentList `
