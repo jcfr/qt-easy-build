@@ -54,6 +54,8 @@ if("${MODE}" STREQUAL "configure")
   message(STATUS "---------------------------------")
   message(STATUS "${msg}")
 
+  string(TOLOWER ${QT_BUILD_TYPE} QT_BUILD_TYPE)
+
   execute_process(
     COMMAND ${QT_BUILD_DIR}/configure.exe
       -opensource -confirm-license
