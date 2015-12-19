@@ -1,5 +1,9 @@
 message(STATUS "---------------------------------")
 
+# Include helper CMake modules
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
+include(QEBGetOpenSSLBinariesDownloadURL)
+
 # Set default for value for script options
 if(NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -35,39 +39,9 @@ else()
   message(FATAL_ERROR "Specified QT_PLATFORM:${QT_PLATFORM} is not supported !")
 endif()
 
-if(QT_PLATFORM STREQUAL "win32-msvc2013")
-  if(BITS EQUAL 64)
-    set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/8915/OpenSSL_1_0_1h-install-msvc1800-64.tar.gz")
-    set(OPENSSL_MD5 "7aefdd94babefbe603cca48ff86da768")
-  else()
-    set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/8918/OpenSSL_1_0_1h-install-msvc1800-32.tar.gz")
-    set(OPENSSL_MD5 "f10ceb422ab37f2b0bd5e225c74fd1d4")
-  endif()
-elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
-  if(BITS EQUAL 64)
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6099/OpenSSL_1_0_1h-install-msvc1600-64.tar.gz")
-    set(OPENSSL_MD5 "b54a0a4b396397fdf96e55f0f7345dd1")
-  else()
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6096/OpenSSL_1_0_1h-install-msvc1600-32.tar.gz")
-    set(OPENSSL_MD5 "e80269ae7969276977a342cccc1df5c5")
-  endif()
-elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
-  if(BITS EQUAL 64)
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6099/OpenSSL_1_0_1h-install-msvc1600-64.tar.gz")
-    set(OPENSSL_MD5 "b54a0a4b396397fdf96e55f0f7345dd1")
-  else()
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6096/OpenSSL_1_0_1h-install-msvc1600-32.tar.gz")
-    set(OPENSSL_MD5 "e80269ae7969276977a342cccc1df5c5")
-  endif()
-elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
-  if(BITS EQUAL 64)
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6090/OpenSSL_1_0_1h-install-msvc1500-64.tar.gz")
-    set(OPENSSL_MD5 "dab0c026ab56fd0fbfe2843d14218fad")
-  else()
-    set(OPENSSL_URL "http://packages.kitware.com/download/item/6093/OpenSSL_1_0_1h-install-msvc1500-32.tar.gz")
-    set(OPENSSL_MD5 "8b110bb48063223c3b9f3a99f1fa9067")
-  endif()
-endif()
+# Get OpenSSL binaries download URL and MD5
+qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.1h" OPENSSL_URL OPENSSL_MD5)
+
 set(QT_URL "http://packages.kitware.com/download/bitstream/8940/qt-everywhere-opensource-src-4.8.7.zip")
 set(QT_MD5 "0d3427d71aa0e8aec87288d7329e26cb")
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
@@ -199,50 +173,30 @@ _extract_archive(${QT_FILE} ${QT_BUILD_DIR})
 _extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
 
 # Configure Qt
-set(msg "Configuring Qt")
-set(step_file "${QT_BUILD_DIR}.configure.ok")
-message(STATUS "---------------------------------")
-message(STATUS "${msg}")
-if(NOT EXISTS ${step_file})
-  execute_process(
-    COMMAND ${QT_BUILD_DIR}/configure.exe
-      -opensource -confirm-license
-      -shared
-      -platform ${QT_PLATFORM} -${qt_build_type}
-      -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
-      -nomake examples
-      -nomake demos
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
-  if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
-    message(STATUS "${msg} - ok")
-  else()
-    message(FATAL_ERROR "${msg} - error")
-  endif()
-else()
-  message(STATUS "${msg} - already done")
+execute_process(
+  COMMAND ${CMAKE_COMMAND}
+    -DMODE=configure
+    -DQT_PLATFORM=${QT_PLATFORM}
+    -DQT_BUILD_TYPE=${qt_build_type}
+    -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+    -DOPENSSL_LIB_DIR=${OPENSSL_LIB_DIR}
+    -DQT_BUILD_DIR=${QT_BUILD_DIR}
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+  RESULT_VARIABLE result_var
+  )
+if(NOT result_var EQUAL 0)
+  message(FATAL_ERROR "")
 endif()
 
 # Build Qt
-set(msg "Building Qt")
-set(step_file "${QT_BUILD_DIR}.build.ok")
-message(STATUS "---------------------------------")
-message(STATUS "${msg}")
-if(NOT EXISTS ${step_file})
-  execute_process(
-    COMMAND ${JOM_EXECUTABLE} -j4
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
-  if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
-    message(STATUS "${msg} - ok")
-  else()
-    message(FATAL_ERROR "${msg} - error")
-  endif()
-else()
-  message(STATUS "${msg} - already done")
+execute_process(
+  COMMAND ${CMAKE_COMMAND}
+    -DMODE=build
+    -DQT_BUILD_DIR=${QT_BUILD_DIR}
+    -DJOM_EXECUTABLE=${JOM_EXECUTABLE}
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+  RESULT_VARIABLE result_var
+  )
+if(NOT result_var EQUAL 0)
+  message(FATAL_ERROR "")
 endif()

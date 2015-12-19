@@ -18,15 +18,26 @@ if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDire
 
 cinst jom
 
+function Always-Download-File {
+param (
+  [string]$url,
+  [string]$file
+  )
+  If (Test-Path $file) {
+    Remove-Item $file
+  }
+  Write-Host "Download $url"
+  $downloader = new-object System.Net.WebClient
+  $downloader.DownloadFile($url, $file)
+}
+
 function Download-File {
 param (
   [string]$url,
   [string]$file
   )
   if (![System.IO.File]::Exists($file)) {
-    Write-Host "Downloading $url to $file"
-    $downloader = new-object System.Net.WebClient
-    $downloader.DownloadFile($url, $file)
+    Always-Download-File '$url' '$file'
   }
 }
 
@@ -54,13 +65,20 @@ $cmake = Join-Path $cmakeInstallDir 'bin\cmake.exe'
 # download cross-platform build script
 $qtBuildScriptName = 'build_qt_with_openssl.cmake'
 $qtBuildScriptFile = Join-Path $destDir $qtBuildScriptName
-If (Test-Path $qtBuildScriptFile)
-  {
-  Remove-Item $qtBuildScriptFile
-  }
 $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
-Write-Host "Download $url"
-Download-File $url $qtBuildScriptFile
+Always-Download-File $url $qtBuildScriptFile
+
+# download cross-platform helper script(s)
+$scriptName = 'QEBGetOpenSSLBinariesDownloadURL.cmake'
+$scriptFile = Join-Path $destDir $scriptName
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+Always-Download-File $url $scriptFile
+
+# download cross-platform helper script(s)
+$scriptName = 'QEBQt4ExternalProjectCommand.cmake'
+$scriptFile = Join-Path $destDir $scriptName
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+Always-Download-File $url $scriptFile
 
 pushd $destDir
 
