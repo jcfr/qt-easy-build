@@ -11,7 +11,7 @@ where `mode` is either configure or build.
 ")
 
 # Describe parameters expected with each mode
-set(configure_options QT_PLATFORM QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIB_DIR)
+set(configure_options QT_PLATFORM QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIBRARY_DIR)
 set(build_options JOM_EXECUTABLE QT_BUILD_DIR)
 
 # Check if all option associated with the given are set.
@@ -60,7 +60,7 @@ if("${MODE}" STREQUAL "configure")
       -shared
       -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
       -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIB_DIR}
+      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
       -nomake examples
       -nomake demos
     WORKING_DIRECTORY ${QT_BUILD_DIR}
