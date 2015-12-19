@@ -54,9 +54,9 @@ set(OPENSSL_FILE ${DEST_DIR}/${_archive_name})
 string(REGEX REPLACE "(\\.|=)(bz2|tar\\.gz|tgz|zip)$" "" _archive_basename "${_archive_name}")
 set(OPENSSL_INSTALL_DIR ${DEST_DIR}/${_archive_basename})
 set(OPENSSL_INCLUDE_DIR "${OPENSSL_INSTALL_DIR}/${CMAKE_BUILD_TYPE}/include")
-set(OPENSSL_LIB_DIR "${OPENSSL_INSTALL_DIR}/${CMAKE_BUILD_TYPE}/lib")
+set(OPENSSL_LIBRARY_DIR "${OPENSSL_INSTALL_DIR}/${CMAKE_BUILD_TYPE}/lib")
 message(STATUS "OPENSSL_INCLUDE_DIR: ${OPENSSL_INCLUDE_DIR}")
-message(STATUS "OPENSSL_LIB_DIR: ${OPENSSL_LIB_DIR}")
+message(STATUS "OPENSSL_LIBRARY_DIR: ${OPENSSL_LIBRARY_DIR}")
 
 # Set Qt variables
 get_filename_component(_archive_name ${QT_URL} NAME)
@@ -179,7 +179,7 @@ execute_process(
     -DQT_PLATFORM=${QT_PLATFORM}
     -DQT_BUILD_TYPE=${qt_build_type}
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
-    -DOPENSSL_LIB_DIR=${OPENSSL_LIB_DIR}
+    -DOPENSSL_LIBRARY_DIR=${OPENSSL_LIBRARY_DIR}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
     -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
