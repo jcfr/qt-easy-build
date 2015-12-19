@@ -37,7 +37,7 @@ param (
   [string]$file
   )
   if (![System.IO.File]::Exists($file)) {
-    Always-Download-File '$url' '$file'
+    Always-Download-File $url $file
   }
 }
 
