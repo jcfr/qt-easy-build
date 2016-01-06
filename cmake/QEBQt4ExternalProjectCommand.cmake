@@ -1,3 +1,13 @@
+cmake_minimum_required(VERSION 2.8.12)
+
+foreach(p
+  CMP0054 # CMake 3.1
+  )
+  if(POLICY ${p})
+    cmake_policy(SET ${p} NEW)
+  endif()
+endforeach()
+
 #
 # QEBQt4ExternalProjectCommands
 #
@@ -14,10 +24,10 @@ where `mode` is either configure or build.
 set(configure_options QT_PLATFORM QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIBRARY_DIR)
 set(build_options JOM_EXECUTABLE QT_BUILD_DIR)
 
-# Check if all option associated with the given are set.
+# Check if all options associated with the given mode are set.
 function(_check_mode_options mode)
   foreach(opt IN LISTS ${mode}_options)
-    if("${opt}" STREQUAL "")
+    if("${${opt}}" STREQUAL "")
       message(FATAL_ERROR "Mode ${mode} expects option ${opt} to be specified.")
     endif()
   endforeach()
