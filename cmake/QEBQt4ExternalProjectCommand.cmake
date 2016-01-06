@@ -20,13 +20,19 @@ set(usage
 where `mode` is either configure or build.
 ")
 
-# Describe parameters expected with each mode
+# If option USE_STEP_FILE is set to 1, either configure or build mode will check
+# for the existence of a step file named '${QT_BUILD_DIR}.<mode>.ok'. If the
+# step file exists, the corresponding step will be considered "completed" and
+# will be skipped.
+
+# Describe parameters (OPT) expected with each mode
+set(common_options USE_STEP_FILE)
 set(configure_options QT_PLATFORM QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIBRARY_DIR)
 set(build_options JOM_EXECUTABLE QT_BUILD_DIR)
 
 # Check if all options associated with the given mode are set.
 function(_check_mode_options mode)
-  foreach(opt IN LISTS ${mode}_options)
+  foreach(opt IN LISTS common_options ${mode}_options)
     if("${${opt}}" STREQUAL "")
       message(FATAL_ERROR "Mode ${mode} expects option ${opt} to be specified.")
     endif()
@@ -57,7 +63,7 @@ if("${MODE}" STREQUAL "configure")
 
   set(msg "Configuring Qt")
   set(step_file "${QT_BUILD_DIR}.configure.ok")
-  if(EXISTS ${step_file})
+  if(USE_STEP_FILE AND EXISTS ${step_file})
     message(STATUS "${msg} - already done")
     return()
   endif()
@@ -79,7 +85,9 @@ if("${MODE}" STREQUAL "configure")
     RESULT_VARIABLE result_var
     )
   if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
+    if(USE_STEP_FILE)
+      file(WRITE ${step_file} "")
+    endif()
     message(STATUS "${msg} - ok")
   else()
     message(FATAL_ERROR "Problem configuring Qt")
@@ -94,7 +102,7 @@ elseif("${MODE}" STREQUAL "build")
 
   set(msg "Building Qt")
   set(step_file "${QT_BUILD_DIR}.build.ok")
-  if(EXISTS ${step_file})
+  if(USE_STEP_FILE AND EXISTS ${step_file})
     message(STATUS "${msg} - already done")
     return()
   endif()
@@ -107,7 +115,9 @@ elseif("${MODE}" STREQUAL "build")
     RESULT_VARIABLE result_var
     )
   if(result_var EQUAL 0)
-    file(WRITE ${step_file} "")
+    if(USE_STEP_FILE)
+      file(WRITE ${step_file} "")
+    endif()
     message(STATUS "${msg} - ok")
   else()
     message(FATAL_ERROR "Problem building Qt")

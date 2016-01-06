@@ -172,10 +172,16 @@ endfunction()
 _extract_archive(${QT_FILE} ${QT_BUILD_DIR})
 _extract_archive(${OPENSSL_FILE} ${OPENSSL_INSTALL_DIR})
 
+# Options common to configure and build steps
+set(common_options
+  -DUSE_STEP_FILE=1
+  )
+
 # Configure Qt
 execute_process(
   COMMAND ${CMAKE_COMMAND}
     -DMODE=configure
+    ${common_options}
     -DQT_PLATFORM=${QT_PLATFORM}
     -DQT_BUILD_TYPE=${qt_build_type}
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
@@ -192,6 +198,7 @@ endif()
 execute_process(
   COMMAND ${CMAKE_COMMAND}
     -DMODE=build
+    ${common_options}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
     -DJOM_EXECUTABLE=${JOM_EXECUTABLE}
     -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
