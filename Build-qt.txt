@@ -35,7 +35,7 @@ md5=`md5sum ./openssl-1.0.1h.tar.gz | awk '{ print $1 }'` &&
   ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
 tar -xzvf openssl-1.0.1h.tar.gz && \
 cd openssl-1.0.1h/  && \
-./config zlib -lzlib -L$cwd/zlib-install/lib shared && \
+./config zlib -lzlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
 cd ..
 
@@ -112,7 +112,7 @@ md5=`md5 ./openssl-1.0.1h.tar.gz | awk '{ print $4 }'` &&
 tar -xzvf openssl-1.0.1h.tar.gz && \
 cd openssl-1.0.1h/  && \
 export KERNEL_BITS=64 && \
-./config zlib -lzlib -L$cwd/zlib-install/lib shared && \
+./config zlib -lzlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
 install_name_tool -id $cwd/openssl-1.0.1h/libcrypto.dylib $cwd/openssl-1.0.1h/libcrypto.dylib && \
 install_name_tool \
