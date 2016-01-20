@@ -21,6 +21,7 @@ cmake -DCMAKE_BUILD_TYPE:STRING=Release \
        ../zlib && \
 make -j4 && \
 make install && \
+cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a && \
 cd ..
 
 # Build OpenSSL
@@ -35,7 +36,7 @@ md5=`md5sum ./openssl-1.0.1h.tar.gz | awk '{ print $1 }'` &&
   ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
 tar -xzvf openssl-1.0.1h.tar.gz && \
 cd openssl-1.0.1h/  && \
-./config zlib -lzlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
+./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
 cd ..
 
@@ -97,6 +98,7 @@ cd zlib-build  && \
        ../zlib && \
 make -j4 && \
 make install && \
+cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a && \
 cd ..
 
 # Build OpenSSL
@@ -112,7 +114,7 @@ md5=`md5 ./openssl-1.0.1h.tar.gz | awk '{ print $4 }'` &&
 tar -xzvf openssl-1.0.1h.tar.gz && \
 cd openssl-1.0.1h/  && \
 export KERNEL_BITS=64 && \
-./config zlib -lzlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
+./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared && \
 make -j1 build_libs && \
 install_name_tool -id $cwd/openssl-1.0.1h/libcrypto.dylib $cwd/openssl-1.0.1h/libcrypto.dylib && \
 install_name_tool \
