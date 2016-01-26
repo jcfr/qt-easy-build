@@ -3,13 +3,8 @@ Script allowing to very easily build qt with openssl support on Linux, Windows o
 Prerequisites
 =============
 
-* Windows: Install [chocolatey](http://chocolatey.org/)
-
-```PowerShell
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%systemdrive%\chocolatey\bin
-```
-
-* Reboot machine
+* Windows: Build system has been updated and `chocolatey` is **NOT** a requirement anymore. `jom` wil be downloaded.
+directly.
 
 Usage
 =====

@@ -16,8 +16,6 @@ $qtBuildScriptVersion = '09260687360a22f0e1e3791dbaff1c1a37a1eb58'
 
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
 
-cinst jom
-
 function Always-Download-File {
 param (
   [string]$url,
@@ -45,6 +43,22 @@ param (
 Write-Host "Download 7Zip commandline tool"
 $7zaExe = Join-Path $destDir '7za.exe'
 Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7za.exe?raw=true' "$7zaExe"
+
+# download jom
+Write-Host "Download jom commandline tool"
+$jomBaseName = 'jom_1_1_0'
+$jomArchiveName = $jomBaseName + '.zip'
+$jomInstallDir = Join-Path $destDir $jomBaseName
+$jomArchiveUrl = 'http://download.qt.io/official_releases/jom/' + $jomArchiveName
+$jomArchiveFile = Join-Path $destDir $jomArchiveName
+Download-File $jomArchiveUrl $jomArchiveFile
+
+# extract jom package
+if (![System.IO.Directory]::Exists($jomInstallDir)) {
+  Write-Host "Extracting $jomArchiveFile to $jomInstallDir..."
+  Start-Process "$7zaExe" -ArgumentList "x -o`"$jomInstallDir`" -y `"$jomArchiveFile`"" -Wait
+}
+$jom = Join-Path $jomInstallDir 'jom.exe'
 
 # download CMake
 Write-Host "Download CMake commandline tool"
@@ -87,6 +101,7 @@ Start-Process "$cmake" -ArgumentList `
   "-DDEST_DIR:PATH=$destDir",`
   "-DQT_PLATFORM:STRING=$qtPlatform",`
   "-DBITS:STRING=$bits",`
+  "-DJOM_EXECUTABLE:FILEPATH=$jom",`
   "-P", "$qtBuildScriptFile"`
   -NoNewWindow -PassThru -Wait
 

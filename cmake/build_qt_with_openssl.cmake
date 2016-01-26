@@ -25,6 +25,10 @@ if(NOT BITS MATCHES "^(32|64)$")
   message(FATAL_ERROR "BITS incorrectly set to [${BITS}].
 Hint: '32' or '64' value is expected.")
 endif()
+if(NOT EXISTS "${JOM_EXECUTABLE}")
+    message(FATAL_ERROR "JOM_EXECUTABLE incorrectly set to an invalid path [${JOM_EXECUTABLE}]")
+endif()
+message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 # Set compiler name based on Qt platform
 if(QT_PLATFORM STREQUAL "win32-msvc2013")
@@ -62,21 +66,6 @@ message(STATUS "OPENSSL_LIBRARY_DIR: ${OPENSSL_LIBRARY_DIR}")
 get_filename_component(_archive_name ${QT_URL} NAME)
 set(QT_FILE "${DEST_DIR}/${_archive_name}")
 message(STATUS "QT_BUILD_DIR: ${QT_BUILD_DIR}")
-set(ChocolateyInstall_DIR $ENV{ChocolateyInstall})
-if(NOT EXISTS "${ChocolateyInstall_DIR}")
-  message(FATAL_ERROR "Could not find the ChocolateyInstall environment variable."
-    " Something must have gone wrong with the chocolatey installation."
-    " Aborting.")
-  return()
-endif()
-# Lookup paths to the original jom, not the chocolatey one.
-# The latter does not work. See PR #11
-set(ChocolateyInstall_LIB_DIR ${ChocolateyInstall_DIR}/lib)
-file(GLOB jom_paths "${ChocolateyInstall_LIB_DIR}/jom*")
-list(GET jom_paths 0 jom_path)
-find_program(JOM_EXECUTABLE jom
-  HINTS ${jom_path}/content)
-message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 if(NOT EXISTS ${DEST_DIR})
   message(STATUS "making dir='${DEST_DIR}'")
