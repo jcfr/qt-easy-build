@@ -82,3 +82,10 @@ Windows
 * `buildType` can be set to either 'Release' or 'Debug'
 * `bits` can be set to either '32' or '64'
 * The script will install [jom](http://qt-project.org/wiki/jom) using `cinst jom`.
+* Make sure that your Windows %PATH% environment variable does not contain any quotation marks! This might break both the
+  executables path or even the include paths and make the CMAKE script fail.   Even if your %PATH% contains whitespaces 
+  (e.g. C:\Program Files (x86)\...) no quotes are needed.
+* You might have to add the VS\VC\bin folder to your environment's PATH to let the VS command prompt know about nmake.exe
+  (i.e. C:\Program Files (x86)\Microsoft Visual Studio XX.0\VC\bin )
+  
+
