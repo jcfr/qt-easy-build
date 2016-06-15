@@ -53,6 +53,11 @@ $jomArchiveUrl = 'http://download.qt.io/official_releases/jom/' + $jomArchiveNam
 $jomArchiveFile = Join-Path $destDir $jomArchiveName
 Download-File $jomArchiveUrl $jomArchiveFile
 
+if (![System.IO.Directory]::Exists($jomArchiveFile)) {
+  $jomArchiveUrl = 'http://master.qt.io/official_releases/jom/' + $jomArchiveName
+  Download-File $jomArchiveUrl $jomArchiveFile  
+}
+
 # extract jom package
 if (![System.IO.Directory]::Exists($jomInstallDir)) {
   Write-Host "Extracting $jomArchiveFile to $jomInstallDir..."
