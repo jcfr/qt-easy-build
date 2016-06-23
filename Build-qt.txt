@@ -21,8 +21,8 @@ cmake -DCMAKE_BUILD_TYPE:STRING=Release \
        ../zlib && \
 make -j4 && \
 make install && \
-cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a && \
-cd ..
+cd .. && \
+cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a
 
 # Build OpenSSL
 
@@ -98,8 +98,8 @@ cd zlib-build  && \
        ../zlib && \
 make -j4 && \
 make install && \
-cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a && \
-cd ..
+cd .. && \
+cp zlib-install/lib/libzlib.a zlib-install/lib/libz.a
 
 # Build OpenSSL
 
