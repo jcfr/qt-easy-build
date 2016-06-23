@@ -30,7 +30,7 @@ cwd=$(pwd)
 
 rm -f openssl-1.0.1h.tar.gz && \
 rm -rf openssl-1.0.1h/ && \
-wget http://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
+wget https://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
 md5=`md5sum ./openssl-1.0.1h.tar.gz | awk '{ print $1 }'` &&
 [ $md5 == "8d6d684a9430d5cc98a62a5d8fbda8cf" ] ||
   ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
@@ -107,7 +107,7 @@ cwd=$(pwd)
 
 rm -f openssl-1.0.1h.tar.gz && \
 rm -rf openssl-1.0.1h/ && \
-curl -O http://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
+curl -OL https://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz && \
 md5=`md5 ./openssl-1.0.1h.tar.gz | awk '{ print $4 }'` &&
 [ $md5 == "8d6d684a9430d5cc98a62a5d8fbda8cf" ] ||
   ( echo "MD5 mismatch. Problem downloading OpenSSL" ; exit 1; ) &&
