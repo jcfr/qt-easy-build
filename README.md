@@ -26,7 +26,7 @@ TBD
 Windows
 -------
 
-1. Open desired Visual Studio Command Prompt
+1. Open desired Visual Studio Command Prompt (for 64 bit Qt, use the 64 bit Command Prompt, for 32 bit Qt, use the 32 bit Command Prompt)
 2. Paste the corresponding text from the box below and press enter.
 
 * Visual Studio 2013 64-bit Release
