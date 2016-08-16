@@ -1,0 +1,16 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker pull ubuntu
+    - ~/qt-easy-build/Testing/Docker/build.sh
+
+test:
+  override:
+    - mkdir ~/qt-easy-build-build
+    - docker run -v ~/qt-easy-build:/usr/src/qt-easy-build -v ~/qt-easy-build-build:/usr/src/qt-easy-build-build fbudin69500/qt-easy-build-test /usr/src/qt-easy-build/Testing/Docker/test.sh -j 4
+
+
