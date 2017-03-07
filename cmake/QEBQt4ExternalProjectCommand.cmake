@@ -72,18 +72,34 @@ if("${MODE}" STREQUAL "configure")
 
   string(TOLOWER ${QT_BUILD_TYPE} QT_BUILD_TYPE)
 
-  execute_process(
-    COMMAND ${QT_BUILD_DIR}/configure.exe
-      -opensource -confirm-license
-      -shared
-      -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
-      -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
-      -nomake examples
-      -nomake demos
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
+  if(QT_VERSION STREQUAL "5")
+    execute_process(
+      COMMAND ${QT_BUILD_DIR}/configure.bat
+        -opensource -confirm-license
+        -shared
+        -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
+        -opengl desktop
+        -no-angle
+        -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+        -nomake examples
+        -nomake tests
+      WORKING_DIRECTORY ${QT_BUILD_DIR}
+      RESULT_VARIABLE result_var
+      )
+  elseif(QT_VERSION STREQUAL "4")
+    execute_process(
+      COMMAND ${QT_BUILD_DIR}/configure.exe
+        -opensource -confirm-license
+        -shared
+        -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
+        -webkit
+        -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+        -nomake examples
+        -nomake demos
+      WORKING_DIRECTORY ${QT_BUILD_DIR}
+      RESULT_VARIABLE result_var
+      )
+  endif()
   if(result_var EQUAL 0)
     if(USE_STEP_FILE)
       file(WRITE ${step_file} "")
