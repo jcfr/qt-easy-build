@@ -194,7 +194,7 @@ execute_process(
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
     -DOPENSSL_LIBRARY_DIR=${OPENSSL_LIBRARY_DIR}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
-    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt5ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
   )
 if(NOT result_var EQUAL 0)
@@ -208,7 +208,7 @@ execute_process(
     ${common_options}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
     -DJOM_EXECUTABLE=${JOM_EXECUTABLE}
-    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt5ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
   )
 if(NOT result_var EQUAL 0)
