@@ -10,7 +10,7 @@
 # Acceptable input values:
 #
 # * bits           : 32 or 64
-# * qt_platform    : win32-msvc2008, win32-msvc2010, win32-msvc2012 or win32-msvc2013
+# * qt_platform    : win32-msvc2008, win32-msvc2010, win32-msvc2012, win32-msvc2013, win32-msvc2015 or win32-msvc2017
 # * openssl_version: 1.0.1h
 #
 #
@@ -62,7 +62,23 @@ function(qeb_get_openssl_binaries_download_url bits qt_platform openssl_version 
     message(FATAL_ERROR "${_error_msg}")
   endif()
 
-  if(QT_PLATFORM STREQUAL "win32-msvc2013")
+  if(QT_PLATFORM STREQUAL "win32-msvc2017")
+    if(BITS EQUAL 64)
+      set(OPENSSL_URL "__") #TODO: Kitware Package needs to be uploaded
+      set(OPENSSL_MD5 "__")
+    else()
+      set(OPENSSL_URL "__") #TODO: Kitware Package needs to be uploaded
+      set(OPENSSL_MD5 "__")
+    endif()
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2015")
+    if(BITS EQUAL 64)
+      set(OPENSSL_URL "__") #TODO: Kitware Package needs to be uploaded
+      set(OPENSSL_MD5 "__")
+    else()
+      set(OPENSSL_URL "__") #TODO: Kitware Package needs to be uploaded
+      set(OPENSSL_MD5 "__")
+    endif()
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
     if(BITS EQUAL 64)
       set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/8915/OpenSSL_1_0_1h-install-msvc1800-64.tar.gz")
       set(OPENSSL_MD5 "7aefdd94babefbe603cca48ff86da768")
