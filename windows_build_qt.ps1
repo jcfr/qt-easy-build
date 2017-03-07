@@ -46,7 +46,7 @@ Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7z
 
 # download jom
 Write-Host "Download jom commandline tool"
-$jomBaseName = 'jom_1_1_0'
+$jomBaseName = 'jom_1_1_2'
 $jomArchiveName = $jomBaseName + '.zip'
 $jomInstallDir = Join-Path $destDir $jomBaseName
 $jomArchiveUrl = 'http://download.qt.io/official_releases/jom/' + $jomArchiveName
@@ -66,10 +66,10 @@ $jom = Join-Path $jomInstallDir 'jom.exe'
 
 # download CMake
 Write-Host "Download CMake commandline tool"
-$cmakeBaseName = 'cmake-2.8.12.1-win32-x86'
+$cmakeBaseName = 'cmake-3.7.2-win32-x86'
 $cmakeArchiveName = $cmakeBaseName + '.zip'
 $cmakeInstallDir = Join-Path $destDir $cmakeBaseName
-$cmakeArchiveUrl = 'http://www.cmake.org/files/v2.8/' + $cmakeArchiveName
+$cmakeArchiveUrl = 'http://www.cmake.org/files/v3.7/' + $cmakeArchiveName
 $cmakeArchiveFile = Join-Path $destDir $cmakeArchiveName
 Download-File $cmakeArchiveUrl $cmakeArchiveFile
 
