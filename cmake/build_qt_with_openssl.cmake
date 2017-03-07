@@ -21,6 +21,10 @@ endif()
 if(NOT QT_PLATFORM)
   message(FATAL_ERROR "QT_PLATFORM has not been set !")
 endif()
+if(NOT QT_VERSION MATCHES "^(4|5)$")
+  message(FATAL_ERROR "QT_VERSION incorrectly set to [${qtVersion}].
+Hint: '4' or '5' value is expected.")
+endif()
 if(NOT BITS MATCHES "^(32|64)$")
   message(FATAL_ERROR "BITS incorrectly set to [${BITS}].
 Hint: '32' or '64' value is expected.")
@@ -31,7 +35,14 @@ endif()
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 # Set compiler name based on Qt platform
-if(QT_PLATFORM STREQUAL "win32-msvc2013")
+if(QT_PLATFORM STREQUAL "win32-msvc2017")
+  set(_compiler_name "vs2017")
+  if(QT_VERSION STREQUAL "4")
+    message(FATAL_ERROR "QT_VERSION:${qtVersion} is not supported with QT_PLATFORM:${QT_PLATFORM}]")
+  endif()
+elseif(QT_PLATFORM STREQUAL "win32-msvc2015")
+  set(_compiler_name "vs2015")
+elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
   set(_compiler_name "vs2013")
 elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
   set(_compiler_name "vs2012")
@@ -46,11 +57,18 @@ endif()
 # Get OpenSSL binaries download URL and MD5
 qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.1h" OPENSSL_URL OPENSSL_MD5)
 
-set(QT_URL "http://packages.kitware.com/download/bitstream/8940/qt-everywhere-opensource-src-4.8.7.zip")
-set(QT_MD5 "0d3427d71aa0e8aec87288d7329e26cb")
+if(QT_VERSION STREQUAL "5")
+  set(QT_URL "http://download.qt.io/official_releases/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.zip") #TODO: qt or kitware hosted link?
+  set(QT_MD5 "1e372fabc9d97a32877cb4adb377e7c8")
+  set(_version_string "5.8.0")
+elseif(QT_VERSION STREQUAL "4")
+  set(QT_URL "http://packages.kitware.com/download/bitstream/8940/qt-everywhere-opensource-src-4.8.7.zip")
+  set(QT_MD5 "0d3427d71aa0e8aec87288d7329e26cb")
+  set(_version_string "4.8.7")
+endif()
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
 string(SUBSTRING ${qt_build_type} 0 3 _short_build_type)
-set(QT_BUILD_DIR "${DEST_DIR}/qt-4.8.7-${BITS}-${_compiler_name}-${_short_build_type}")
+set(QT_BUILD_DIR "${DEST_DIR}/qt-${_version_string}-${BITS}-${_compiler_name}-${_short_build_type}")
 
 # Set OpenSSL variables
 get_filename_component(_archive_name ${OPENSSL_URL} NAME)

@@ -8,6 +8,9 @@ if(!($buildType -match "^(Debug|Release)$")){
 if(!$qtPlatform){
   throw "'qtPlatform' variable not set."
 }
+if(!($qtVersion -match "^(4|5)$")){
+  throw "'qtVersion' variable incorrectly set to [$qtVersion]. Hint: '4' or '5' value is expected."
+}
 if(!($bits -match "^(32|64)$")){
   throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
 }
@@ -104,6 +107,7 @@ Start-Process "$cmake" -ArgumentList `
   "-DCMAKE_BUILD_TYPE:STRING=$buildType",`
   "-DDEST_DIR:PATH=$destDir",`
   "-DQT_PLATFORM:STRING=$qtPlatform",`
+  "-DQT_VERSION:STRING=$qtVersion",`
   "-DBITS:STRING=$bits",`
   "-DJOM_EXECUTABLE:FILEPATH=$jom",`
   "-P", "$qtBuildScriptFile"`
