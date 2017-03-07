@@ -58,6 +58,10 @@ function(qeb_get_openssl_binaries_download_url bits qt_platform openssl_version 
 
   # XXX If more than one version of OpenSSL should effectively be supported, the
   #     following code should be refactored.
+  # Note: The latest stable version is the 1.1.0 series of releases. Also available is the 1.0.2 series. 
+  # This is also our Long Term Support (LTS) version (support will be provided until 31st December 2019). 
+  # The 0.9.8, 1.0.0 and 1.0.1 versions are now out of support and should not be used.
+  # See: https://www.openssl.org/source/
   if(NOT openssl_version STREQUAL "1.0.1h")
     message(FATAL_ERROR "${_error_msg}")
   endif()
