@@ -32,73 +32,73 @@ Windows
 * Visual Studio 2017 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2017';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2017';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2017 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2017';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2017';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2015 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2015';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2015';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2015 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2015';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2015';$qtVersion='5';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2013 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2013';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2013';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2013 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2013';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2013';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2012 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2012';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2012';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2012 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2012';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2012';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2010 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2010';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2010';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2010 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2010';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2010';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2008 64-bit Release
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2008';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2008';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 * Visual Studio 2008 64-bit Debug
 
 ```PowerShell
-@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2008';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2008';$qtVersion='4';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0/windows_build_qt.ps1'))"
 ```
 
 ### Notes ###
