@@ -43,7 +43,7 @@ if(QT_VERSION STREQUAL "5") #qt >=5.7 require a C++11 compliant compiler to buil
   elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
     set(_compiler_name "vs2013")
   else()
-    message(FATAL_ERROR "QT_VERSION:${qtVersion} is not supported with QT_PLATFORM:${QT_PLATFORM}]")
+    message(FATAL_ERROR "qtVersion: [${QT_VERSION}] is not supported with qtPlatform: [${QT_PLATFORM}]")
   endif()
 elseif(QT_VERSION STREQUAL "4")
   if(QT_PLATFORM STREQUAL "win32-msvc2015")
@@ -52,26 +52,27 @@ elseif(QT_VERSION STREQUAL "4")
     set(_compiler_name "vs2013")
   elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
     set(_compiler_name "vs2012")
-  elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
-    set(_compiler_name "vs2010")
-  elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
-    set(_compiler_name "vs2008")
+  # elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
+  #   set(_compiler_name "vs2010")
+  # elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
+  #   set(_compiler_name "vs2008")
   else()
-    message(FATAL_ERROR "QT_VERSION:${qtVersion} is not supported with QT_PLATFORM:${QT_PLATFORM}]")
+    message(FATAL_ERROR "qtVersion: [${QT_VERSION}] is not supported with qtPlatform: [${QT_PLATFORM}]")
   endif()
 endif()
 
 
 # Get OpenSSL binaries download URL and MD5
-qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.1h" OPENSSL_URL OPENSSL_MD5)
+qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.2k" OPENSSL_URL OPENSSL_MD5)
 
 if(QT_VERSION STREQUAL "5")
-  set(QT_URL "http://download.qt.io/official_releases/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.zip") #TODO: qt or kitware hosted link?
+  set(QT_URL "http://download.qt.io/official_releases/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.zip")
   set(QT_MD5 "1e372fabc9d97a32877cb4adb377e7c8")
   set(_version_string "5.8.0")
 elseif(QT_VERSION STREQUAL "4")
-  set(QT_URL "http://packages.kitware.com/download/bitstream/8940/qt-everywhere-opensource-src-4.8.7.zip")
-  set(QT_MD5 "0d3427d71aa0e8aec87288d7329e26cb")
+  # patch version fixes build errors when using msvc2015
+  set(QT_URL "http://packages.kitware.com/download/bitstream/10386/qt-everywhere-opensource-src-4.8.7-patch2015.zip")
+  set(QT_MD5 "dbdb0d130e9440d1360d20f767fec167")
   set(_version_string "4.8.7")
 endif()
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
@@ -198,6 +199,7 @@ execute_process(
     -DMODE=configure
     ${common_options}
     -DQT_PLATFORM=${QT_PLATFORM}
+    -DQT_VERSION=${QT_VERSION}
     -DQT_BUILD_TYPE=${qt_build_type}
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
     -DOPENSSL_LIBRARY_DIR=${OPENSSL_LIBRARY_DIR}

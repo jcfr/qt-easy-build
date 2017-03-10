@@ -15,7 +15,7 @@ if(!($bits -match "^(32|64)$")){
   throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
 }
 
-$qtBuildScriptVersion = '6f59ca17b3bcc6b56fa636522dab6a862be0c856'
+# $qtBuildScriptVersion = '6f59ca17b3bcc6b56fa636522dab6a862be0c856'
 
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
 
@@ -86,19 +86,22 @@ $cmake = Join-Path $cmakeInstallDir 'bin\cmake.exe'
 # download cross-platform build script
 $qtBuildScriptName = 'build_qt_with_openssl.cmake'
 $qtBuildScriptFile = Join-Path $destDir $qtBuildScriptName
-$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
+# $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0' + '/cmake/' + $qtBuildScriptName)
 Always-Download-File $url $qtBuildScriptFile
 
 # download cross-platform helper script(s)
 $scriptName = 'QEBGetOpenSSLBinariesDownloadURL.cmake'
 $scriptFile = Join-Path $destDir $scriptName
-$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+# $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0' + '/cmake/' + $scriptName)
 Always-Download-File $url $scriptFile
 
 # download cross-platform helper script(s)
 $scriptName = 'QEBQt5ExternalProjectCommand.cmake'
 $scriptFile = Join-Path $destDir $scriptName
-$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+# $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7-5.8.0' + '/cmake/' + $scriptName)
 Always-Download-File $url $scriptFile
 
 pushd $destDir

@@ -1,4 +1,3 @@
-
 #
 # qeb_get_openssl_binaries_download_url(bits qt_platform url_var md5_var)
 #
@@ -58,10 +57,6 @@ function(qeb_get_openssl_binaries_download_url bits qt_platform openssl_version 
 
   # XXX If more than one version of OpenSSL should effectively be supported, the
   #     following code should be refactored.
-  # Note: The latest stable version is the 1.1.0 series of releases. Also available is the 1.0.2 series. 
-  # This is also our Long Term Support (LTS) version (support will be provided until 31st December 2019). 
-  # The 0.9.8, 1.0.0 and 1.0.1 versions are now out of support and should not be used.
-  # See: https://www.openssl.org/source/
   if(NOT openssl_version STREQUAL "1.0.2k")
     message(FATAL_ERROR "${_error_msg}")
   endif()
@@ -90,14 +85,14 @@ function(qeb_get_openssl_binaries_download_url bits qt_platform openssl_version 
       set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/10382/OpenSSL_1_0_2k-install-msvc1800-32.tar.gz")
       set(OPENSSL_MD5 "79c42146295b4dbfd4dbc53fff0b6fb3")
     endif()
-  # elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
-  #   if(BITS EQUAL 64)
-  #     set(OPENSSL_URL "http://packages.kitware.com/download/item/6099/OpenSSL_1_0_1h-install-msvc1600-64.tar.gz")
-  #     set(OPENSSL_MD5 "b54a0a4b396397fdf96e55f0f7345dd1")
-  #   else()
-  #     set(OPENSSL_URL "http://packages.kitware.com/download/item/6096/OpenSSL_1_0_1h-install-msvc1600-32.tar.gz")
-  #     set(OPENSSL_MD5 "e80269ae7969276977a342cccc1df5c5")
-  #   endif()
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
+    if(BITS EQUAL 64)
+      set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/10384/OpenSSL_1_0_2k-install-msvc1700-64.tar.gz")
+      set(OPENSSL_MD5 "5eb19f8612b582cd728bdb7b08842bed")
+    else()
+      set(OPENSSL_URL "http://packages.kitware.com/download/bitstream/10385/OpenSSL_1_0_2k-install-msvc1700-32.tar.gz")
+      set(OPENSSL_MD5 "28fed9090f8008093d59b40de54391b2")
+    endif()
   # elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
   #   if(BITS EQUAL 64)
   #     set(OPENSSL_URL "http://packages.kitware.com/download/item/6099/OpenSSL_1_0_1h-install-msvc1600-64.tar.gz")
