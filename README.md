@@ -114,7 +114,7 @@ Supported Configurations:
 
 * `buildType` can be set to either 'Release' or 'Debug'
 
-* `qtPlatform` can be set to either '5' or '4'
+* `qtVersion` can be set to either '5' or '4'
 
 * `bits` can be set to either '32' or '64'
 
