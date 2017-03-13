@@ -15,6 +15,8 @@ if(!($bits -match "^(32|64)$")){
   throw "'bits' variable incorrectly set to [$bits]. Hint: '32' or '64' value is expected."
 }
 
+$OSArchitecture = (Get-WmiObject Win32_OperatingSystem).OSArchitecture
+
 # $qtBuildScriptVersion = '6f59ca17b3bcc6b56fa636522dab6a862be0c856'
 
 if (![System.IO.Directory]::Exists($destDir)) {[System.IO.Directory]::CreateDirectory($destDir)}
@@ -42,11 +44,104 @@ param (
   }
 }
 
+Function Ensure-PyExecutableExists
+{
+    Param
+    (
+        [Parameter( Mandatory = $True )]
+        [string]
+        $Executable,
+
+        [string]
+        $MinimumVersion = ""
+    )
+    # Initial condition
+    $needpython = "False"
+    $python3 = [version]"3.0.0"
+
+    if ((Get-Command -Name $Executable -ErrorAction SilentlyContinue) -eq $null) 
+    { 
+      Write-host "Unable to find $( $Executable ) in your PATH."
+      $needpython = "True" #switch
+      break
+    }
+    $p = python -V
+    $CurrentVersionString = $p[7]+$p[8]+$p[9]+$p[10]+$p[11]+$p[12]
+    $CurrentVersion = [version]$CurrentVersionString
+    If( $MinimumVersion )
+    {$RequiredVersion = [version]$MinimumVersion
+        If( $CurrentVersion -lt $RequiredVersion -Or $CurrentVersion -gt $python3 )
+        {
+        Write-host "$( $Executable ) version $( $CurrentVersion ) must be greater than $( $RequiredVersion ) and less than 3.0.0"
+        $needpython = "True" #switch
+        break
+        # Python 3 is not supported by Chromium
+        # Python 2 version >=2.7.5 is required to build Qt WebEngine
+        }
+    }
+}
+
 # download 7zip
 Write-Host "Download 7Zip commandline tool"
 $7zaExe = Join-Path $destDir '7za.exe'
 Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7za.exe?raw=true' "$7zaExe"
 
+# Check for and Install(if necessary) the additional tools needed to build Qt5
+if($qtVersion -match "^(5)$"){
+  Ensure-PyExecutableExists -Executable python -MinimumVersion "2.7.5"
+  if( $needpython ){
+    Write-Host "Download Python distribution"
+      if($OSArchitecture -match "64-bit"){
+      $pythonBaseName = 'python-2.7.13.amd64'
+      }
+      else{
+      $pythonBaseName = 'python-2.7.13'
+      }
+    $pythonArchiveName = $pythonBaseName + '.msi'
+    $pythonInstallDir = Join-Path $destDir $pythonBaseName
+    $pythonArchiveUrl = 'https://www.python.org/ftp/python/2.7.13/' + $pythonArchiveName
+    $pythonArchiveFile = Join-Path $destDir $pythonArchiveName
+    Download-File $pythonArchiveUrl $pythonArchiveFile
+
+    # Install python with .MSI file
+    if (![System.IO.Directory]::Exists($pythonInstallDir)) {
+      Write-Host "Installing Python 2.7.13"
+      Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $pythonArchiveFile TARGETDIR=$pythonInstallDir /qn" -Wait -Passthru
+    }
+    $python = $pythonInstallDir
+    $env:Path = "$python;" + $env:Path
+  }
+
+  if ((Get-Command "perl.exe" -ErrorAction SilentlyContinue) -eq $null) 
+  { 
+    Write-Host "Unable to find perl.exe in your PATH"
+    # download Strawberry Perl
+    Write-Host "Download Strawberry Perl portable tool"
+    if($OSArchitecture -match "64-bit"){
+      $perlBaseName = 'strawberry-perl-5.24.1.1-64bit-portable'
+    }
+    else{
+      $perlBaseName = 'strawberry-perl-5.24.1.1-32bit-portable'
+    }
+    $perlArchiveName = $perlBaseName + '.zip'
+    $perlInstallDir = Join-Path $destDir $perlBaseName
+    $perlArchiveUrl = 'http://strawberryperl.com/download/5.24.1.1/' + $perlArchiveName
+    $perlArchiveFile = Join-Path $destDir $perlArchiveName
+    Download-File $perlArchiveUrl $perlArchiveFile
+
+    # extract Strawberry Perl package
+    if (![System.IO.Directory]::Exists($perlInstallDir)) {
+      Write-Host "Extracting $perlArchiveFile to $perlInstallDir..."
+      Start-Process "$7zaExe" -ArgumentList "x -o`"$perlInstallDir`" -y `"$perlArchiveFile`"" -Wait
+    }
+    $perl = Join-Path $perlInstallDir 'perl\bin'
+    $perl1 = Join-Path $perlInstallDir 'perl\site\bin'
+    $perl2 = Join-Path $perlInstallDir 'c\bin'
+    $env:Path = "$perl;$perl1;$perl2;" + $env:Path
+  }
+}
+
+# Tools needed to build Qt5 or Qt4
 # download jom
 Write-Host "Download jom commandline tool"
 $jomBaseName = 'jom_1_1_2'
@@ -69,7 +164,12 @@ $jom = Join-Path $jomInstallDir 'jom.exe'
 
 # download CMake
 Write-Host "Download CMake commandline tool"
-$cmakeBaseName = 'cmake-3.7.2-win32-x86'
+if($OSArchitecture -match "64-bit"){
+  $cmakeBaseName = 'cmake-3.7.2-win64-x64'
+}
+else{
+  $cmakeBaseName = 'cmake-3.7.2-win32-x86'
+}
 $cmakeArchiveName = $cmakeBaseName + '.zip'
 $cmakeInstallDir = Join-Path $destDir $cmakeBaseName
 $cmakeArchiveUrl = 'http://www.cmake.org/files/v3.7/' + $cmakeArchiveName
@@ -115,5 +215,8 @@ Start-Process "$cmake" -ArgumentList `
   "-DJOM_EXECUTABLE:FILEPATH=$jom",`
   "-P", "$qtBuildScriptFile"`
   -NoNewWindow -PassThru -Wait
+
+Write-Host "Uninstalling temporary Python27"
+Start-Process -FilePath "msiexec.exe" -ArgumentList "/x $pythonArchiveFile /qn" -Wait -Passthru
 
 popd

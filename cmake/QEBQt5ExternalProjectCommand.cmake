@@ -80,6 +80,7 @@ if("${MODE}" STREQUAL "configure")
         -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
         -opengl desktop
         -no-angle
+        -skip qtwebengine
         -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
         -nomake examples
         -nomake tests
