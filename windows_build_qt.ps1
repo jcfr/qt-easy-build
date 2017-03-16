@@ -44,8 +44,7 @@ param (
   }
 }
 
-Function Ensure-PyExecutableExists
-{
+function Ensure-PyExecutableExists {
     Param
     (
         [Parameter( Mandatory = $True )]
@@ -56,28 +55,30 @@ Function Ensure-PyExecutableExists
         $MinimumVersion = ""
     )
     # Initial condition
-    $needpython = "False"
+    $needpython = $False
     $python3 = [version]"3.0.0"
 
     if ((Get-Command -Name $Executable -ErrorAction SilentlyContinue) -eq $null) 
     { 
       Write-host "Unable to find $( $Executable ) in your PATH."
-      $needpython = "True" #switch
-      break
+      $needpython = $True #switch
+      return $needpython
     }
-    $p = python -V
-    $CurrentVersionString = $p[7]+$p[8]+$p[9]+$p[10]+$p[11]+$p[12]
-    $CurrentVersion = [version]$CurrentVersionString
-    If( $MinimumVersion )
-    {$RequiredVersion = [version]$MinimumVersion
+    else
+    { # get python version
+      $p = python -V
+      $CurrentVersionString = $p[7]+$p[8]+$p[9]+$p[10]+$p[11]+$p[12]
+      $CurrentVersion = [version]$CurrentVersionString
+      $RequiredVersion = [version]$MinimumVersion
         If( $CurrentVersion -lt $RequiredVersion -Or $CurrentVersion -gt $python3 )
-        {
-        Write-host "$( $Executable ) version $( $CurrentVersion ) must be greater than $( $RequiredVersion ) and less than 3.0.0"
-        $needpython = "True" #switch
-        break
-        # Python 3 is not supported by Chromium
-        # Python 2 version >=2.7.5 is required to build Qt WebEngine
-        }
+          {
+          Write-host "$( $Executable ) version $( $CurrentVersion ) must be greater than $( $RequiredVersion ) and less than 3.0.0"
+          $needpython = $True #switch
+          return $needpython
+          # Python 3 is not supported by Chromium
+          # Python 2 version >=2.7.5 is required to build Qt WebEngine
+          }
+      return $needpython
     }
 }
 
@@ -88,7 +89,7 @@ Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7z
 
 # Check for and Install(if necessary) the additional tools needed to build Qt5
 if($qtVersion -match "^(5)$"){
-  Ensure-PyExecutableExists -Executable python -MinimumVersion "2.7.5"
+  $needpython = Ensure-PyExecutableExists -Executable python -MinimumVersion "2.7.5"
   if( $needpython ){
     Write-Host "Download Python distribution"
       if($OSArchitecture -match "64-bit"){
@@ -97,19 +98,19 @@ if($qtVersion -match "^(5)$"){
       else{
       $pythonBaseName = 'python-2.7.13'
       }
-    $pythonArchiveName = $pythonBaseName + '.msi'
-    $pythonInstallDir = Join-Path $destDir $pythonBaseName
-    $pythonArchiveUrl = 'https://www.python.org/ftp/python/2.7.13/' + $pythonArchiveName
-    $pythonArchiveFile = Join-Path $destDir $pythonArchiveName
-    Download-File $pythonArchiveUrl $pythonArchiveFile
+      $pythonArchiveName = $pythonBaseName + '.msi'
+      $pythonInstallDir = Join-Path $destDir $pythonBaseName
+      $pythonArchiveUrl = 'https://www.python.org/ftp/python/2.7.13/' + $pythonArchiveName
+      $pythonArchiveFile = Join-Path $destDir $pythonArchiveName
+      Download-File $pythonArchiveUrl $pythonArchiveFile
 
-    # Install python with .MSI file
-    if (![System.IO.Directory]::Exists($pythonInstallDir)) {
-      Write-Host "Installing Python 2.7.13"
-      Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $pythonArchiveFile TARGETDIR=$pythonInstallDir /qn" -Wait -Passthru
-    }
-    $python = $pythonInstallDir
-    $env:Path = "$python;" + $env:Path
+      # Install python with .MSI file
+      if (![System.IO.Directory]::Exists($pythonInstallDir)) {
+        Write-Host "Installing Python 2.7.13"
+        Start-Process -FilePath "msiexec.exe" -ArgumentList "/i $pythonArchiveFile TARGETDIR=$pythonInstallDir /qn" -Wait -Passthru
+      }
+      $python = $pythonInstallDir
+      $env:Path = "$python;" + $env:Path
   }
 
   if ((Get-Command "perl.exe" -ErrorAction SilentlyContinue) -eq $null) 
