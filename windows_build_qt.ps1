@@ -166,14 +166,14 @@ $jom = Join-Path $jomInstallDir 'jom.exe'
 # download CMake
 Write-Host "Download CMake commandline tool"
 if($OSArchitecture -match "64-bit"){
-  $cmakeBaseName = 'cmake-3.7.2-win64-x64'
+  $cmakeBaseName = 'cmake-3.8.0-win64-x64'
 }
 else{
-  $cmakeBaseName = 'cmake-3.7.2-win32-x86'
+  $cmakeBaseName = 'cmake-3.8.0-win32-x86'
 }
 $cmakeArchiveName = $cmakeBaseName + '.zip'
 $cmakeInstallDir = Join-Path $destDir $cmakeBaseName
-$cmakeArchiveUrl = 'http://www.cmake.org/files/v3.7/' + $cmakeArchiveName
+$cmakeArchiveUrl = 'http://www.cmake.org/files/v3.8/' + $cmakeArchiveName
 $cmakeArchiveFile = Join-Path $destDir $cmakeArchiveName
 Download-File $cmakeArchiveUrl $cmakeArchiveFile
 

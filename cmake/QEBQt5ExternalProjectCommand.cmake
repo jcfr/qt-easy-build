@@ -80,7 +80,8 @@ if("${MODE}" STREQUAL "configure")
         -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
         -opengl desktop
         -no-angle
-        -skip qtwebengine
+        -skip qtwebengine 
+        # NOTE: To build QtWebEngine in Qt5.8, you need Visual Studio 2015 Update 3 (or later) & Windows 10 SDK 10.0.14393. (B/c Chromium requirements)
         -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
         -nomake examples
         -nomake tests
