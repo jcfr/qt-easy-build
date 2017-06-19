@@ -136,9 +136,9 @@ curl -OL http://download.qt.io/official_releases/qt/4.8/4.8.7/qt-everywhere-open
 md5=`md5 ./qt-everywhere-opensource-src-4.8.7.tar.gz | awk '{ print $4 }'` &&
 [ $md5 == "d990ee66bf7ab0c785589776f35ba6ad" ] ||
   ( echo "MD5 mismatch. Problem downloading Qt" ; exit 1; ) &&
-curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1 && \
 tar -xzvf qt-everywhere-opensource-src-4.8.7.tar.gz && \
 cd qt-everywhere-opensource-src-4.8.7 && \
+curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1 && \
 ./configure -prefix ../qt-everywhere-opensource-build-4.8.7/  \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -arch x86_64  -nomake examples -nomake demos        \
