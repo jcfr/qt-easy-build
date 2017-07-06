@@ -176,7 +176,7 @@ echo "Build OpenSSL"
 
 cwd=$(pwd)
 
-tar -xzvf openssl-1.0.1h.tar.gz
+tar -xzf openssl-1.0.1h.tar.gz
 cd openssl-1.0.1h/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
 make -j $nbthreads build_libs
@@ -202,7 +202,7 @@ then
 fi
 qt_install_dir_options="-prefix $install_dir"
 
-tar -xzvf qt-everywhere-opensource-src-4.8.7.tar.gz
+tar -xzf qt-everywhere-opensource-src-4.8.7.tar.gz
 cd qt-everywhere-opensource-src-4.8.7
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
@@ -212,6 +212,7 @@ fi
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -nomake examples -nomake demos                      \
+  -silent                                                     \
   -openssl -I $cwd/openssl-1.0.1h/include                     \
   ${qt_macos_options}                                         \
   -L $cwd/openssl-1.0.1h
