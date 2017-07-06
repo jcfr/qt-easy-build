@@ -97,9 +97,15 @@ fi
 
 # Download archives (Qt, and openssl
 echo "Download openssl"
-curl -OL https://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz
+if ! [ -f openssl-1.0.1h.tar.gz ]
+then
+  curl -OL https://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz
+fi
 echo "Download Qt"
-curl -OL http://download.qt.io/official_releases/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz
+if ! [ -f qt-everywhere-opensource-src-4.8.7.tar.gz ]
+then
+  curl -OL http://download.qt.io/official_releases/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz
+fi
 
 # Check if building on MacOS or Linux
 # And verifies downloaded archives accordingly
