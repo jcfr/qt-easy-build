@@ -213,6 +213,7 @@ fi
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -nomake examples -nomake demos                      \
   -silent                                                     \
+  -no-phonon                                                  \
   -openssl -I $cwd/openssl-1.0.1h/include                     \
   ${qt_macos_options}                                         \
   -L $cwd/openssl-1.0.1h
