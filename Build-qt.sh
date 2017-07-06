@@ -17,7 +17,7 @@ Options:
   -h             Display this help and exit.
   -j             Number of threads to compile tools. [default: 1]
   -m             Path for cmake.
-  -q             Installation directory for Qt. [default: /usr/local/Trolltech/Qt-4.8.7/]
+  -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-4.8.7]
 
 MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
@@ -183,11 +183,12 @@ echo "Build Qt"
 
 cwd=$(pwd)
 
-if [[ -n $install_dir ]]
+if [[ -z $install_dir ]]
 then
-  mkdir qt-everywhere-opensource-build-4.8.7
-  qt_install_dir_options="-prefix ../qt-everywhere-opensource-build-4.8.7/"
+  install_dir="$cwd/qt-everywhere-opensource-build-4.8.7"
+  mkdir $install_dir
 fi
+qt_install_dir_options="-prefix $install_dir"
 
 tar -xzvf qt-everywhere-opensource-src-4.8.7.tar.gz
 cd qt-everywhere-opensource-src-4.8.7
