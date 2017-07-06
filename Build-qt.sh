@@ -22,7 +22,7 @@ Options:
 MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
   -d             OSX deployment target. [default: 10.6]
-  -s             OSX sysroot. [default: /Developer/SDKs/MacOSX10.6.sdk]
+  -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
 EOF
 }
 clean=0
@@ -110,7 +110,11 @@ then
   fi
   if [[ -z $osx_sysroot ]]
   then
-    sysroot=/Developer/SDKs/MacOSX10.6.sdk
+    osx_sysroot=$(xcrun --show-sdk-path)
+  fi
+  if [[ -z $osx_sysroot ]]
+  then
+    osx_sysroot=/Developer/SDKs/MacOSX10.6.sdk
   fi
   if [[ -z $osx_architecture ]]
   then
