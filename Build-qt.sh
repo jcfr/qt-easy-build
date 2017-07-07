@@ -7,14 +7,14 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=4.8.7
+QT_VERSION=5.7.1
 
 # OpenSSL version
 OPENSSL_VERSION=1.0.1h
 
 # MD5 checksums
 OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
-QT_MD5="d990ee66bf7ab0c785589776f35ba6ad"
+QT_MD5="031fb3fd0c3cc0f1082644492683f18d"
 
 #
 # Generated configuration
@@ -44,8 +44,8 @@ Options:
 
 MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.6]
-  -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
+  -d             OSX deployment target. [default: 10.8]
+  -s             OSX sysroot. [default: macosx10.12]
 EOF
 }
 clean=0
@@ -125,7 +125,7 @@ fi
 echo "Download Qt"
 if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz ]
 then
-  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
 fi
 
 # Check if building on MacOS or Linux
@@ -135,15 +135,11 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.6
+    osx_deployment_target=10.8
   fi
   if [[ -z $osx_sysroot ]]
   then
-    osx_sysroot=$(xcrun --show-sdk-path)
-  fi
-  if [[ -z $osx_sysroot ]]
-  then
-    osx_sysroot=/Developer/SDKs/MacOSX10.6.sdk
+    osx_sysroot=macosx10.12
   fi
   if [[ -z $osx_architecture ]]
   then
@@ -225,16 +221,12 @@ qt_install_dir_options="-prefix $install_dir"
 
 tar -xzf qt-everywhere-opensource-src-$QT_VERSION.tar.gz
 cd qt-everywhere-opensource-src-$QT_VERSION
-# If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
-if [ "$(uname)" == "Darwin" ]
-then
-  curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1
-fi
 ./configure $qt_install_dir_options                           \
-  -release -opensource -confirm-license -no-qt3support        \
-  -webkit -nomake examples -nomake demos                      \
-  -silent                                                     \
-  -no-phonon                                                  \
+  -release -opensource -confirm-license \
+  -c++std c++11 \
+  -nomake examples \
+  -nomake tests \
+  -silent \
   -openssl -I $cwd/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
   -L $cwd/openssl-$OPENSSL_VERSION
