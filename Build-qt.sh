@@ -22,6 +22,9 @@ QT_MD5="d990ee66bf7ab0c785589776f35ba6ad"
 
 QT_MAJOR_MINOR_VERSION=$(echo $QT_VERSION | awk -F . '{ print $1"."$2 }')
 
+# Defaults
+clean=0
+nbthreads=1
 
 show_help() {
 cat << EOF
@@ -36,9 +39,9 @@ This script is a convenience script to install Qt on the system. It:
 
 Options:
 
-  -c             Clean directories that are going to be used.
+  -c             Clean directories that are going to be used. [default: $clean]
   -h             Display this help and exit.
-  -j             Number of threads to compile tools. [default: 1]
+  -j             Number of threads for compile tools. [default: $nbthreads]
   -m             Path for cmake.
   -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
 
@@ -48,8 +51,7 @@ MacOS only:
   -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
 EOF
 }
-clean=0
-nbthreads=1
+
 while [ $# -gt 0 ]; do
   case "$1" in
     -h)
