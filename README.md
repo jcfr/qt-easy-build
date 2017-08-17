@@ -9,18 +9,20 @@ directly.
 Usage
 =====
 
-Linux
------
+Linux and macOS
+---------------
+
+1. Open a terminal and copy the text below:
 
 ```
-TBD
+curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/4.8.7/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
+./Build-qt.sh -j 4
 ```
 
-MacOSX
-------
+To display script options:
 
 ```
-TBD
+./Build-qt.sh --help
 ```
 
 Windows
