@@ -100,8 +100,11 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-openssl_download_url=https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
-qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
+openssl_download_url=https://packages.kitware.com/download/item/6173/$openssl_archive
+
+qt_archive=qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/$qt_archive
 
 # Install directory
 cwd=$(pwd)
@@ -173,23 +176,27 @@ if [ $clean -eq 1 ]
 then
   echo "Remove previous files and directories"
   rm -rf zlib*
-  rm -f openssl-$OPENSSL_VERSION.tar.gz
+  rm -f $openssl_archive
   rm -rf openssl-$OPENSSL_VERSION
-  rm -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  rm -f $qt_archive
   rm -rf qt-everywhere-opensource-src-$QT_VERSION
   rm -rf qt-everywhere-opensource-build-$QT_VERSION
 fi
 
-# Download archives (Qt, and openssl
+# Download archives
 echo "Download openssl"
-if ! [ -f openssl-$OPENSSL_VERSION.tar.gz ]
+if ! [ -f $openssl_archive ]
 then
   curl -OL $openssl_download_url
+else
+  echo "  skipping (found $openssl_archive)"
 fi
 echo "Download Qt"
-if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} ]
+if ! [ -f $qt_archive ]
 then
   curl -OL $qt_download_url
+else
+  echo "  skipping (found $qt_archive)"
 fi
 
 # Check if building on MacOS or Linux
@@ -219,12 +226,12 @@ then
   export KERNEL_BITS=64
   qt_macos_options="-arch $osx_architecture -sdk $osx_sysroot"
 
-  md5_openssl=`md5 ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $4 }'`
-  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $4 }'`
+  md5_openssl=`md5 ./$openssl_archive | awk '{ print $4 }'`
+  md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
 else
   # Linux
-  md5_openssl=`md5sum ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $1 }'`
-  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $1 }'`
+  md5_openssl=`md5sum ./$openssl_archive | awk '{ print $1 }'`
+  md5_qt=`md5sum ./$qt_archive | awk '{ print $1 }'`
 fi
 if [ "$md5_openssl" != "$OPENSSL_MD5" ]
 then
@@ -264,7 +271,10 @@ echo "Build OpenSSL"
 
 cwd=$(pwd)
 
-tar -xzf openssl-$OPENSSL_VERSION.tar.gz
+if [[ ! -d openssl-$OPENSSL_VERSION ]]
+then
+  tar -xf $openssl_archive
+fi
 cd openssl-$OPENSSL_VERSION/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
 make -j $nbthreads build_libs
@@ -286,13 +296,18 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
+then
+  tar -xf $qt_archive
+fi
 cd qt-everywhere-opensource-src-$QT_VERSION
+
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
 then
   curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1
 fi
+
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -nomake examples -nomake demos                      \
