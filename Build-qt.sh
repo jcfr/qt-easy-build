@@ -1,4 +1,27 @@
 #!/bin/bash
+set -e
+set -o pipefail
+
+#
+# Configuration
+#
+
+# Qt version (major.minor.revision)
+QT_VERSION=4.8.7
+
+# OpenSSL version
+OPENSSL_VERSION=1.0.1h
+
+# MD5 checksums
+OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
+QT_MD5="d990ee66bf7ab0c785589776f35ba6ad"
+
+#
+# Generated configuration
+#
+
+QT_MAJOR_MINOR_VERSION=$(echo $QT_VERSION | awk -F . '{ print $1"."$2 }')
+
 
 show_help() {
 cat << EOF
@@ -17,12 +40,12 @@ Options:
   -h             Display this help and exit.
   -j             Number of threads to compile tools. [default: 1]
   -m             Path for cmake.
-  -q             Installation directory for Qt. [default: /usr/local/Trolltech/Qt-4.8.7/]
+  -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
 
 MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
   -d             OSX deployment target. [default: 10.6]
-  -s             OSX sysroot. [default: /Developer/SDKs/MacOSX10.6.sdk]
+  -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
 EOF
 }
 clean=0
@@ -74,11 +97,11 @@ if [ $clean -eq 1 ]
 then
   echo "Remove previous files and directories"
   rm -rf zlib*
-  rm -f openssl-1.0.1h.tar.gz
-  rm -rf openssl-1.0.1h
-  rm -f qt-everywhere-opensource-src-4.8.7.tar.gz
-  rm -rf qt-everywhere-opensource-src-4.8.7
-  rm -rf qt-everywhere-opensource-build-4.8.7
+  rm -f openssl-$OPENSSL_VERSION.tar.gz
+  rm -rf openssl-$OPENSSL_VERSION
+  rm -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  rm -rf qt-everywhere-opensource-src-$QT_VERSION
+  rm -rf qt-everywhere-opensource-build-$QT_VERSION
 fi
 # If cmake path was not given, verify that it is available on the system
 # CMake is required to configure zlib
@@ -95,9 +118,15 @@ fi
 
 # Download archives (Qt, and openssl
 echo "Download openssl"
-curl -OL https://packages.kitware.com/download/item/6173/openssl-1.0.1h.tar.gz
+if ! [ -f openssl-$OPENSSL_VERSION.tar.gz ]
+then
+  curl -OL https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
+fi
 echo "Download Qt"
-curl -OL http://download.qt.io/official_releases/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz
+if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz ]
+then
+  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+fi
 
 # Check if building on MacOS or Linux
 # And verifies downloaded archives accordingly
@@ -110,7 +139,11 @@ then
   fi
   if [[ -z $osx_sysroot ]]
   then
-    sysroot=/Developer/SDKs/MacOSX10.6.sdk
+    osx_sysroot=$(xcrun --show-sdk-path)
+  fi
+  if [[ -z $osx_sysroot ]]
+  then
+    osx_sysroot=/Developer/SDKs/MacOSX10.6.sdk
   fi
   if [[ -z $osx_architecture ]]
   then
@@ -122,19 +155,19 @@ then
   export KERNEL_BITS=64
   qt_macos_options="-arch $osx_architecture -sdk $osx_sysroot"
 
-  md5_openssl=`md5 ./openssl-1.0.1h.tar.gz | awk '{ print $4 }'`
-  md5_qt=`md5 ./qt-everywhere-opensource-src-4.8.7.tar.gz | awk '{ print $4 }'`
+  md5_openssl=`md5 ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $4 }'`
+  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $4 }'`
 else
   # Linux
-  md5_openssl=`md5sum ./openssl-1.0.1h.tar.gz | awk '{ print $1 }'`
-  md5_qt=`md5sum ./qt-everywhere-opensource-src-4.8.7.tar.gz | awk '{ print $1 }'`
+  md5_openssl=`md5sum ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $1 }'`
+  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $1 }'`
 fi
-if [ "$md5_openssl" != "8d6d684a9430d5cc98a62a5d8fbda8cf" ]
+if [ "$md5_openssl" != "$OPENSSL_MD5" ]
 then
   echo "MD5 mismatch. Problem downloading OpenSSL"
   exit 1
 fi
-if [ "$md5_qt" != "d990ee66bf7ab0c785589776f35ba6ad" ]
+if [ "$md5_qt" != "$QT_MD5" ]
 then
   echo "MD5 mismatch. Problem downloading Qt"
   exit 1
@@ -164,17 +197,17 @@ echo "Build OpenSSL"
 
 cwd=$(pwd)
 
-tar -xzvf openssl-1.0.1h.tar.gz
-cd openssl-1.0.1h/
+tar -xzf openssl-$OPENSSL_VERSION.tar.gz
+cd openssl-$OPENSSL_VERSION/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
 make -j $nbthreads build_libs
 # If MacOS, install openssl libraries
 if [ "$(uname)" == "Darwin" ]
 then
-  install_name_tool -id $cwd/openssl-1.0.1h/libcrypto.dylib $cwd/openssl-1.0.1h/libcrypto.dylib
+  install_name_tool -id $cwd/openssl-$OPENSSL_VERSION/libcrypto.dylib $cwd/openssl-$OPENSSL_VERSION/libcrypto.dylib
   install_name_tool                                                                            \
-          -change /usr/local/ssl/lib/libcrypto.1.0.0.dylib $cwd/openssl-1.0.1h/libcrypto.dylib \
-          -id $cwd/openssl-1.0.1h/libssl.dylib $cwd/openssl-1.0.1h/libssl.dylib
+          -change /usr/local/ssl/lib/libcrypto.1.0.0.dylib $cwd/openssl-$OPENSSL_VERSION/libcrypto.dylib \
+          -id $cwd/openssl-$OPENSSL_VERSION/libssl.dylib $cwd/openssl-$OPENSSL_VERSION/libssl.dylib
 fi
 cd ..
 
@@ -183,14 +216,15 @@ echo "Build Qt"
 
 cwd=$(pwd)
 
-if [[ -n $install_dir ]]
+if [[ -z $install_dir ]]
 then
-  mkdir qt-everywhere-opensource-build-4.8.7
-  qt_install_dir_options="-prefix ../qt-everywhere-opensource-build-4.8.7/"
+  install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
+  mkdir $install_dir
 fi
+qt_install_dir_options="-prefix $install_dir"
 
-tar -xzvf qt-everywhere-opensource-src-4.8.7.tar.gz
-cd qt-everywhere-opensource-src-4.8.7
+tar -xzf qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+cd qt-everywhere-opensource-src-$QT_VERSION
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
 then
@@ -199,9 +233,11 @@ fi
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license -no-qt3support        \
   -webkit -nomake examples -nomake demos                      \
-  -openssl -I $cwd/openssl-1.0.1h/include                     \
+  -silent                                                     \
+  -no-phonon                                                  \
+  -openssl -I $cwd/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
-  -L $cwd/openssl-1.0.1h
+  -L $cwd/openssl-$OPENSSL_VERSION
 make -j $nbthreads
 make install
 
