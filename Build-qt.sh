@@ -176,9 +176,12 @@ echo "Build zlib"
 
 cwd=$(pwd)
 
-mkdir zlib-install
-mkdir zlib-build
-git clone git://github.com/commontk/zlib.git
+mkdir -p zlib-install
+mkdir -p zlib-build
+if [[ ! -d zlib ]]
+then
+  git clone git://github.com/commontk/zlib.git
+fi
 cd zlib-build
 $cmake -DCMAKE_BUILD_TYPE:STRING=Release             \
        -DZLIB_MANGLE_PREFIX:STRING=slicer_zlib_      \
@@ -195,7 +198,10 @@ echo "Build OpenSSL"
 
 cwd=$(pwd)
 
-tar -xzf openssl-$OPENSSL_VERSION.tar.gz
+if [[ ! -d openssl-$OPENSSL_VERSION ]]
+then
+  tar -xzf openssl-$OPENSSL_VERSION.tar.gz
+fi
 cd openssl-$OPENSSL_VERSION/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
 make -j $nbthreads build_libs
@@ -217,11 +223,14 @@ cwd=$(pwd)
 if [[ -z $install_dir ]]
 then
   install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
-  mkdir $install_dir
+  mkdir -p $install_dir
 fi
 qt_install_dir_options="-prefix $install_dir"
 
-tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
+then
+  tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+fi
 cd qt-everywhere-opensource-src-$QT_VERSION
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
