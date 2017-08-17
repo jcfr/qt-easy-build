@@ -83,7 +83,7 @@ Windows
 
 * `bits` can be set to either '32' or '64'
 
-* The script will install [jom](http://qt-project.org/wiki/jom) using `cinst jom`.
+* The script will install [jom](http://qt-project.org/wiki/jom) downloading it from http://download.qt.io/official_releases/jom/.
 
 * Make sure that your Windows `%PATH%` environment variable does not contain any quotation marks! This
   might break both the executables path or even the include paths and make the [CMake script fail](https://github.com/jcfr/qt-easy-build/issues/19#issuecomment-213411046).
