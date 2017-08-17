@@ -3,18 +3,20 @@ Script allowing to very easily build qt with openssl support on Linux, Windows o
 Usage
 =====
 
-Linux
------
+Linux and macOS
+---------------
+
+1. Open a terminal and copy the text below:
 
 ```
-TBD
+curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.9.1/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
+./Build-qt.sh -j 4
 ```
 
-MacOSX
-------
+To display script options:
 
 ```
-TBD
+./Build-qt.sh --help
 ```
 
 Windows
