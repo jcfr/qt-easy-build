@@ -45,7 +45,7 @@ Options:
   -y             Do not prompt user and skip confirmation.
   -c             Clean directories that are going to be used. [default: $clean]
   -h             Display this help and exit.
-  -j             Number of threads for compile tools. [default: $nbthreads]
+  -j             Number of threads for parallel build. [default: $nbthreads]
   -m             Path for cmake.
   -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
 
@@ -143,7 +143,7 @@ Script options:
  -c Clean directories that are going to be used .. $clean
  -q Installation directory for Qt ................ $install_dir
  -m Path to cmake ................................ $cmake
- -j Number of threads for build tool ............. $nbthreads
+ -j Number of threads for parallel build.......... $nbthreads
 
 Download URLs:
 * Qt      : $qt_download_url
