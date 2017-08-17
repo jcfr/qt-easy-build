@@ -200,7 +200,7 @@ cwd=$(pwd)
 
 if [[ ! -d openssl-$OPENSSL_VERSION ]]
 then
-  tar -xzf openssl-$OPENSSL_VERSION.tar.gz
+  tar -xf openssl-$OPENSSL_VERSION.tar.gz
 fi
 cd openssl-$OPENSSL_VERSION/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
@@ -229,7 +229,7 @@ qt_install_dir_options="-prefix $install_dir"
 
 if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
 then
-  tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+  tar -xf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 fi
 cd qt-everywhere-opensource-src-$QT_VERSION
 ./configure $qt_install_dir_options                           \
