@@ -5,9 +5,11 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 
 # Supported Qt versions
 
-* [4.8.7](https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme)
-* [5.7.1](https://github.com/jcfr/qt-easy-build/tree/5.7.1#readme)
 * [5.9.1](https://github.com/jcfr/qt-easy-build/tree/5.9.1#readme)
+* [5.7.1](https://github.com/jcfr/qt-easy-build/tree/5.7.1#readme)
+* [4.8.7](https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme)
+* [4.8.6](https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme)
+* [4.8.5](https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme)
 
 # License
 
