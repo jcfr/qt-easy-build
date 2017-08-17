@@ -16,6 +16,8 @@ OPENSSL_VERSION=1.0.1h
 OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
 QT_MD5="d990ee66bf7ab0c785589776f35ba6ad"
 
+QT_SRC_ARCHIVE_EXT="tar.gz"
+
 #
 # Generated configuration
 #
@@ -185,7 +187,7 @@ then
   curl -OL $openssl_download_url
 fi
 echo "Download Qt"
-if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz ]
+if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} ]
 then
   curl -OL $qt_download_url
 fi
@@ -218,11 +220,11 @@ then
   qt_macos_options="-arch $osx_architecture -sdk $osx_sysroot"
 
   md5_openssl=`md5 ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $4 }'`
-  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $4 }'`
+  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $4 }'`
 else
   # Linux
   md5_openssl=`md5sum ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $1 }'`
-  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $1 }'`
+  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $1 }'`
 fi
 if [ "$md5_openssl" != "$OPENSSL_MD5" ]
 then
@@ -281,7 +283,7 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-tar -xzf qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 cd qt-everywhere-opensource-src-$QT_VERSION
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
