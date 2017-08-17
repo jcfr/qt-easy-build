@@ -93,6 +93,9 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+openssl_download_url=https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
+qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+
 # If "clean", remove all directories and temporary files
 # that are downloaded and used in this script.
 if [ $clean -eq 1 ]
@@ -122,12 +125,12 @@ fi
 echo "Download openssl"
 if ! [ -f openssl-$OPENSSL_VERSION.tar.gz ]
 then
-  curl -OL https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
+  curl -OL $openssl_download_url
 fi
 echo "Download Qt"
 if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz ]
 then
-  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  curl -OL $qt_download_url
 fi
 
 # Check if building on MacOS or Linux
