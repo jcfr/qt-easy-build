@@ -27,6 +27,7 @@ QT_MAJOR_MINOR_VERSION=$(echo $QT_VERSION | awk -F . '{ print $1"."$2 }')
 # Defaults
 clean=0
 nbthreads=1
+confirmed=0
 
 show_help() {
 cat << EOF
@@ -41,6 +42,7 @@ This script is a convenience script to install Qt on the system. It:
 
 Options:
 
+  -y             Do not prompt user and skip confirmation.
   -c             Clean directories that are going to be used. [default: $clean]
   -h             Display this help and exit.
   -j             Number of threads for compile tools. [default: $nbthreads]
@@ -87,6 +89,9 @@ while [ $# -gt 0 ]; do
       osx_sysroot=$2
       shift
       ;;
+    -y)
+      confirmed=1
+      ;;
     *)
       show_help >&2
       exit 1
@@ -98,18 +103,21 @@ done
 openssl_download_url=https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 
-# If "clean", remove all directories and temporary files
-# that are downloaded and used in this script.
-if [ $clean -eq 1 ]
+# Install directory
+cwd=$(pwd)
+if [[ -z $install_dir ]]
 then
-  echo "Remove previous files and directories"
-  rm -rf zlib*
-  rm -f openssl-$OPENSSL_VERSION.tar.gz
-  rm -rf openssl-$OPENSSL_VERSION
-  rm -f qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
-  rm -rf qt-everywhere-opensource-src-$QT_VERSION
-  rm -rf qt-everywhere-opensource-build-$QT_VERSION
+  install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
 fi
+
+# Check if building on MacOS or Linux
+# And verifies downloaded archives accordingly
+SYSTEM="Linux"
+if [ "$(uname)" == "Darwin" ]
+then
+  SYSTEM="Darwin"
+fi
+
 # If cmake path was not given, verify that it is available on the system
 # CMake is required to configure zlib
 if [[ -z "$cmake" ]]
@@ -120,7 +128,56 @@ then
     echo "cmake not found"
     exit 1
   fi
-  echo "Using cmake found here: $cmake"
+fi
+
+show_summary() {
+cat << EOF
+
+This script will build Qt for $SYSTEM system
+
+QT_VERSION      : $QT_VERSION
+OPENSSL_VERSION : $OPENSSL_VERSION
+
+Script options:
+
+ -c Clean directories that are going to be used .. $clean
+ -q Installation directory for Qt ................ $install_dir
+ -m Path to cmake ................................ $cmake
+ -j Number of threads for build tool ............. $nbthreads
+
+Download URLs:
+* Qt      : $qt_download_url
+* OpenSSL : $openssl_download_url
+
+EOF
+}
+
+# Show summary and prompt user
+show_summary
+if [ $confirmed -eq 0 ]
+then
+  read -p "Do you want to continue [y/N] ? " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    confirmed=1
+  else
+    echo "Aborting ..."
+    exit 1
+  fi
+fi
+
+# If "clean", remove all directories and temporary files
+# that are downloaded and used in this script.
+if [ $clean -eq 1 ]
+then
+  echo "Remove previous files and directories"
+  rm -rf zlib*
+  rm -f openssl-$OPENSSL_VERSION.tar.gz
+  rm -rf openssl-$OPENSSL_VERSION
+  rm -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  rm -rf qt-everywhere-opensource-src-$QT_VERSION
+  rm -rf qt-everywhere-opensource-build-$QT_VERSION
 fi
 
 # Download archives (Qt, and openssl
@@ -137,7 +194,7 @@ fi
 
 # Check if building on MacOS or Linux
 # And verifies downloaded archives accordingly
-if [ "$(uname)" == "Darwin" ]
+if [ $SYSTEM == "Darwin" ]
 then
   # MacOS
   if [[ -z $osx_deployment_target ]]
@@ -225,11 +282,7 @@ echo "Build Qt"
 
 cwd=$(pwd)
 
-if [[ -z $install_dir ]]
-then
-  install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
-  mkdir -p $install_dir
-fi
+mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
 if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
