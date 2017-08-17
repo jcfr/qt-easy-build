@@ -16,6 +16,8 @@ OPENSSL_VERSION=1.0.1h
 OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
 QT_MD5="031fb3fd0c3cc0f1082644492683f18d"
 
+QT_SRC_ARCHIVE_EXT="tar.gz"
+
 #
 # Generated configuration
 #
@@ -99,7 +101,7 @@ then
   rm -rf zlib*
   rm -f openssl-$OPENSSL_VERSION.tar.gz
   rm -rf openssl-$OPENSSL_VERSION
-  rm -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  rm -f qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
   rm -rf qt-everywhere-opensource-src-$QT_VERSION
   rm -rf qt-everywhere-opensource-build-$QT_VERSION
 fi
@@ -123,9 +125,9 @@ then
   curl -OL https://packages.kitware.com/download/item/6173/openssl-$OPENSSL_VERSION.tar.gz
 fi
 echo "Download Qt"
-if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.tar.gz ]
+if ! [ -f qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} ]
 then
-  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+  curl -OL https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 fi
 
 # Check if building on MacOS or Linux
@@ -152,11 +154,11 @@ then
   qt_macos_options="-arch $osx_architecture -sdk $osx_sysroot"
 
   md5_openssl=`md5 ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $4 }'`
-  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $4 }'`
+  md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $4 }'`
 else
   # Linux
   md5_openssl=`md5sum ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $1 }'`
-  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.tar.gz | awk '{ print $1 }'`
+  md5_qt=`md5sum ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $1 }'`
 fi
 if [ "$md5_openssl" != "$OPENSSL_MD5" ]
 then
@@ -219,7 +221,7 @@ then
 fi
 qt_install_dir_options="-prefix $install_dir"
 
-tar -xzf qt-everywhere-opensource-src-$QT_VERSION.tar.gz
+tar -xzf qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 cd qt-everywhere-opensource-src-$QT_VERSION
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
