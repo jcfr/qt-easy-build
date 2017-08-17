@@ -187,14 +187,14 @@ fi
 echo "Download openssl"
 if ! [ -f $openssl_archive ]
 then
-  curl -OL $openssl_download_url
+  curl -# -OL $openssl_download_url
 else
   echo "  skipping (found $openssl_archive)"
 fi
 echo "Download Qt"
 if ! [ -f $qt_archive ]
 then
-  curl -OL $qt_download_url
+  curl -# -OL $qt_download_url
 else
   echo "  skipping (found $qt_archive)"
 fi
