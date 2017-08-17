@@ -1,11 +1,5 @@
 Script allowing to very easily build qt with openssl support on Linux, Windows or MacOSX
 
-Prerequisites
-=============
-
-* Windows: Build system has been updated and `chocolatey` is **NOT** a requirement anymore. `jom` wil be downloaded.
-directly.
-
 Usage
 =====
 
