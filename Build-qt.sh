@@ -7,16 +7,16 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.7.1
+QT_VERSION=5.9.1
 
 # OpenSSL version
 OPENSSL_VERSION=1.0.1h
 
 # MD5 checksums
 OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
-QT_MD5="031fb3fd0c3cc0f1082644492683f18d"
+QT_MD5="77b4af61c49a09833d4df824c806acaf"
 
-QT_SRC_ARCHIVE_EXT="tar.gz"
+QT_SRC_ARCHIVE_EXT="tar.xz"
 
 #
 # Generated configuration
@@ -151,7 +151,7 @@ then
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
   export KERNEL_BITS=64
-  qt_macos_options="-arch $osx_architecture -sdk $osx_sysroot"
+  qt_macos_options="-sdk $osx_sysroot"
 
   md5_openssl=`md5 ./openssl-$OPENSSL_VERSION.tar.gz | awk '{ print $4 }'`
   md5_qt=`md5 ./qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT} | awk '{ print $4 }'`
