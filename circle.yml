@@ -1,0 +1,4 @@
+general:
+  branches:
+    ignore:
+      - 4.8.5
