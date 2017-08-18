@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
   libglu1-mesa-dev \
   libfontconfig-dev \
   libxrender-dev \
-  python3
+  python
 
 RUN mkdir -p /usr/src/qt-easy-build-build
 WORKDIR /usr/src/qt-easy-build-build
