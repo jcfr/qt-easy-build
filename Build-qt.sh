@@ -277,7 +277,7 @@ then
 fi
 cd openssl-$OPENSSL_VERSION/
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
-make -j $nbthreads build_libs
+make -j 1 build_libs
 # If MacOS, install openssl libraries
 if [ "$(uname)" == "Darwin" ]
 then
