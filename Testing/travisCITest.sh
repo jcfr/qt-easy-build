@@ -1,18 +1,37 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+set -e
+set -o pipefail
+
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $script_dir
 
 if [ "$(uname)" == "Darwin" ]
 then
   # MacOS
-  $DIR/../Build-qt.sh \
+  $script_dir/../Build-qt.sh \
   -c \
   -j 2 \
-  -d /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
+  -y \
+  -s macosx10.11 \
   -a x86_64 \
-  -s 10.9
+  -d 10.9
 else
-  $DIR/../Build-qt.sh \
+  $script_dir/../Build-qt.sh \
   -c \
-  -j 2 > log.txt 2>&1
+  -j 2 \
+  -y
 fi
+
+die() {
+  echo "Error: $@" 1>&2
+  exit 1;
+}
+
+expected_qt_version="5.9.1"
+
+./qt-everywhere-opensource-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+
+popd
+
