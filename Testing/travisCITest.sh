@@ -12,7 +12,7 @@ then
   # MacOS
   $script_dir/../Build-qt.sh \
   -c \
-  -j 2 \
+  -j 4 \
   -y \
   -s macosx10.11 \
   -a x86_64 \
@@ -20,7 +20,7 @@ then
 else
   $script_dir/../Build-qt.sh \
   -c \
-  -j 2 \
+  -j 4 \
   -y
 fi
 
