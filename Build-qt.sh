@@ -28,6 +28,7 @@ QT_MAJOR_MINOR_VERSION=$(echo $QT_VERSION | awk -F . '{ print $1"."$2 }')
 clean=0
 nbthreads=1
 confirmed=0
+qt_targets=
 
 show_help() {
 cat << EOF
@@ -48,6 +49,7 @@ Options:
   -j             Number of threads for parallel build. [default: $nbthreads]
   -m             Path for cmake.
   -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
+  -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
 
 MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
@@ -91,6 +93,10 @@ while [ $# -gt 0 ]; do
       ;;
     -y)
       confirmed=1
+      ;;
+    -t)
+      qt_targets=$2
+      shift
       ;;
     *)
       show_help >&2
@@ -306,6 +312,14 @@ cd qt-everywhere-opensource-src-$QT_VERSION
   -openssl -I $cwd/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
   -L $cwd/openssl-$OPENSSL_VERSION
-make -j $nbthreads
-make install
+
+if [[ -z $qt_targets ]]
+then
+  make -j $nbthreads
+  make install
+else
+  for target in $qt_targets; do
+    make $target -j $nbthreads
+  done
+fi
 

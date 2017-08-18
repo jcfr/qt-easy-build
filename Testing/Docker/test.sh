@@ -21,6 +21,7 @@ Options:
   -h             Display this help and exit.
   -c             Clean directories that are going to be used.
   -j             Number of threads to use for parallel build
+  -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
 EOF
 }
 
@@ -28,6 +29,7 @@ EOF
 clean_arg=
 nbthreads=1
 expected_qt_version=
+qt_targets=
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -44,6 +46,10 @@ while [ $# -gt 0 ]; do
       ;;
     -q)
       expected_qt_version=$2
+      shift
+      ;;
+    -t)
+      qt_targets="$2"
       shift
       ;;
     *)
@@ -63,7 +69,12 @@ if [ -z $expected_qt_version ]; then
   die "Specify expected Qt version"
 fi
 
-/usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads}
+if [[ -z $qt_targets ]]
+then
+  /usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads}
+else
+  /usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads} -t "$qt_targets"
+fi
 
 /usr/src/qt-easy-build-build/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
