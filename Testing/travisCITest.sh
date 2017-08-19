@@ -29,7 +29,7 @@ die() {
   exit 1;
 }
 
-expected_qt_version="5.9.1"
+expected_qt_version="4.8.7"
 
 ./qt-everywhere-opensource-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
