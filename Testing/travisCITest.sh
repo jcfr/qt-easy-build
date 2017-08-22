@@ -17,13 +17,13 @@ then
   -s macosx10.11 \
   -a x86_64 \
   -d 10.9 \
-  -t "module-qtbase module-qtbase-install_subtargets"
+  -t "sub-tools-bootstrap-all-ordered sub-moc-all-ordered sub-rcc-all-ordered sub-uic-all-ordered sub-corelib-all-ordered sub-gui-all-ordered install_subtargets install_qmake"
 else
   $script_dir/../Build-qt.sh \
   -c \
   -j 4 \
   -y \
-  -t "module-qtbase module-qtbase-install_subtargets"
+  -t "sub-tools-bootstrap-all-ordered sub-moc-all-ordered sub-rcc-all-ordered sub-uic-all-ordered sub-corelib-all-ordered sub-gui-all-ordered install_subtargets install_qmake"
 fi
 
 die() {

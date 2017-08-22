@@ -18,5 +18,5 @@ test:
         fbudin69500/qt-easy-build-test \
           /usr/src/qt-easy-build/Testing/Docker/test.sh \
             -j 4 -c -q "5.9.1" \
-            -t "module-qtbase module-qtbase-install_subtargets"
+            -t "sub-tools-bootstrap-all-ordered sub-moc-all-ordered sub-rcc-all-ordered sub-uic-all-ordered sub-corelib-all-ordered sub-gui-all-ordered install_subtargets install_qmake"
 
