@@ -31,7 +31,9 @@ endif()
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
 # Set compiler name based on Qt platform
-if(QT_PLATFORM STREQUAL "win32-msvc2013")
+if(QT_PLATFORM STREQUAL "win32-msvc2015")
+  set(_compiler_name "vs2015")
+elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
   set(_compiler_name "vs2013")
 elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
   set(_compiler_name "vs2012")
@@ -176,6 +178,7 @@ execute_process(
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
     -DOPENSSL_LIBRARY_DIR=${OPENSSL_LIBRARY_DIR}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
+    -DPATCH_EXECUTABLE=${PATCH_EXECUTABLE}
     -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
   )
