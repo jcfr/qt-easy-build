@@ -10,10 +10,11 @@ set -o pipefail
 QT_VERSION=5.9.1
 
 # OpenSSL version
-OPENSSL_VERSION=1.0.1h
+OPENSSL_VERSION=1.0.2n
+OPENSSL_MIDAS_PACKAGES_ITEM=10337
 
 # MD5 checksums
-OPENSSL_MD5="8d6d684a9430d5cc98a62a5d8fbda8cf"
+OPENSSL_MD5="13bdc1b1d1ff39b6fd42a255e74676a4"
 QT_MD5="77b4af61c49a09833d4df824c806acaf"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
@@ -107,7 +108,7 @@ while [ $# -gt 0 ]; do
 done
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-openssl_download_url=https://packages.kitware.com/download/item/6173/$openssl_archive
+openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
 
 qt_archive=qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
