@@ -31,6 +31,9 @@ nbthreads=1
 confirmed=0
 qt_targets=
 
+export CFLAGS="-std=gnu89"
+export CXXFLAGS="-std=c++98"
+
 show_help() {
 cat << EOF
 Usage: ${0##*/} [-h] [-c] [-j] [-s SYSROOT] [-d DEPLOYMENT_TARGET] [-a ARCHITECTURES] [-q QT_INSTALL_DIR] [-m CMAKE]
@@ -56,6 +59,12 @@ MacOS only:
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
   -d             OSX deployment target. [default: 10.6]
   -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
+
+Environment variables:
+
+  CFLAGS   [${CFLAGS}]
+  CXXFLAGS [${CXXFLAGS}]
+
 EOF
 }
 
@@ -158,6 +167,11 @@ Script options:
 Download URLs:
 * Qt      : $qt_download_url
 * OpenSSL : $openssl_download_url
+
+Environment variables:
+
+  CFLAGS   [${CFLAGS}]
+  CXXFLAGS [${CXXFLAGS}]
 
 EOF
 }
