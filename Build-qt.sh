@@ -31,8 +31,8 @@ nbthreads=1
 confirmed=0
 qt_targets=
 
-export CFLAGS="-std=gnu89"
-export CXXFLAGS="-std=c++98 -Wno-unused-local-typedefs -Wno-c++0x-compat -Wno-delete-non-virtual-dtor"
+export CFLAGS=""
+export CXXFLAGS="-Wno-unused-local-typedefs -Wno-c++0x-compat -Wno-delete-non-virtual-dtor"
 
 show_help() {
 cat << EOF
