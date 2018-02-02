@@ -62,8 +62,7 @@ if [ $SYSTEM == "Linux" ]
 then
   export CXXFLAGS="\
 $CXXFLAGS \
--Wno-unused-but-set-variable
-"
+-Wno-unused-but-set-variable"
 fi
 
 show_help() {
