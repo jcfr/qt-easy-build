@@ -31,8 +31,40 @@ nbthreads=1
 confirmed=0
 qt_targets=
 
-export CFLAGS=""
-export CXXFLAGS="-Wno-unused-local-typedefs -Wno-c++0x-compat -Wno-delete-non-virtual-dtor"
+# Check if building on MacOS or Linux
+SYSTEM="Linux"
+if [ "$(uname)" == "Darwin" ]
+then
+  SYSTEM="Darwin"
+fi
+
+export CFLAGS="\
+-Wno-pointer-to-int-cast"
+export CXXFLAGS="\
+-Wno-c++0x-compat \
+-Wno-delete-non-virtual-dtor \
+-Wno-deprecated-declarations \
+-Wno-int-to-pointer-cast \
+-Wno-logical-not-parentheses \
+-Wno-narrowing \
+-Wno-parentheses \
+-Wno-unused-function \
+-Wno-unused-local-typedefs \
+-Wno-unused-parameter \
+-Wno-unused-variable \
+-Wno-sign-compare \
+-Wno-strict-aliasing \
+-Wno-strict-overflow \
+-Wno-switch"
+
+# XXX Use a more robust check
+if [ $SYSTEM == "Linux" ]
+then
+  export CXXFLAGS="\
+$CXXFLAGS \
+-Wno-unused-but-set-variable
+"
+fi
 
 show_help() {
 cat << EOF
@@ -55,17 +87,23 @@ Options:
   -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
   -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
 
-MacOS only:
-  -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.6]
-  -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
-
 Environment variables:
 
   CFLAGS   [${CFLAGS}]
   CXXFLAGS [${CXXFLAGS}]
 
 EOF
+
+if [ $SYSTEM == "Darwin" ]
+then
+  cat << EOF
+Options (macOS):
+  -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
+  -d             OSX deployment target. [default: 10.6]
+  -s             OSX sysroot. [default: result of 'xcrun --show-sdk-path']
+
+EOF
+fi
 }
 
 while [ $# -gt 0 ]; do
@@ -129,14 +167,6 @@ then
   install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
 fi
 
-# Check if building on MacOS or Linux
-# And verifies downloaded archives accordingly
-SYSTEM="Linux"
-if [ "$(uname)" == "Darwin" ]
-then
-  SYSTEM="Darwin"
-fi
-
 # If cmake path was not given, verify that it is available on the system
 # CMake is required to configure zlib
 if [[ -z "$cmake" ]]
@@ -146,6 +176,28 @@ then
   then
     echo "cmake not found"
     exit 1
+  fi
+fi
+
+# Set macOS options
+if [ $SYSTEM == "Darwin" ]
+then
+  # MacOS
+  if [[ -z $osx_deployment_target ]]
+  then
+    osx_deployment_target=10.6
+  fi
+  if [[ -z $osx_sysroot ]]
+  then
+    osx_sysroot=$(xcrun --show-sdk-path)
+  fi
+  if [[ -z $osx_sysroot ]]
+  then
+    osx_sysroot=/Developer/SDKs/MacOSX10.6.sdk
+  fi
+  if [[ -z $osx_architecture ]]
+  then
+    osx_architecture=x86_64
   fi
 fi
 
@@ -174,6 +226,18 @@ Environment variables:
   CXXFLAGS [${CXXFLAGS}]
 
 EOF
+
+if [ $SYSTEM == "Darwin" ]
+then
+  cat << EOF
+Script options (macOS):
+
+ -a OSX architectures ............................ $osx_architecture
+ -d OSX deployment target ........................ $osx_deployment_target
+ -s OSX sysroot .................................. $osx_sysroot
+
+EOF
+  fi
 }
 
 # Show summary and prompt user
@@ -225,22 +289,6 @@ fi
 if [ $SYSTEM == "Darwin" ]
 then
   # MacOS
-  if [[ -z $osx_deployment_target ]]
-  then
-    osx_deployment_target=10.6
-  fi
-  if [[ -z $osx_sysroot ]]
-  then
-    osx_sysroot=$(xcrun --show-sdk-path)
-  fi
-  if [[ -z $osx_sysroot ]]
-  then
-    osx_sysroot=/Developer/SDKs/MacOSX10.6.sdk
-  fi
-  if [[ -z $osx_architecture ]]
-  then
-    osx_architecture=x86_64
-  fi
   zlib_macos_options="-DCMAKE_OSX_ARCHITECTURES=$osx_architecture
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
@@ -322,6 +370,14 @@ then
   tar --no-same-owner -xf $qt_archive
 fi
 cd qt-everywhere-opensource-src-$QT_VERSION
+
+# Append flags
+if [[ ! -f mkspecs/common/gcc-base.conf.orig ]]; then
+  cp mkspecs/common/gcc-base.conf mkspecs/common/gcc-base.conf.orig
+fi
+cp mkspecs/common/gcc-base.conf.orig mkspecs/common/gcc-base.conf
+echo "QMAKE_CFLAGS += $CFLAGS" >> mkspecs/common/gcc-base.conf
+echo "QMAKE_CXXFLAGS += $CXXFLAGS" >> mkspecs/common/gcc-base.conf
 
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
