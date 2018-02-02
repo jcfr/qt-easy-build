@@ -14,8 +14,6 @@ then
   -c \
   -j 4 \
   -y \
-  -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk \
-  -a x86_64 \
   -d 10.9 \
   -t "sub-tools-bootstrap-make_default-ordered \
 sub-moc-make_default-ordered \
