@@ -1,5 +1,4 @@
 os:
-  - linux
   - osx
 
 # See https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
