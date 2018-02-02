@@ -14,5 +14,5 @@ docker run \
     -v ${root_dir}/qt-easy-build-build:/usr/src/qt-easy-build-build \
   fbudin69500/qt-easy-build-test \
     /usr/src/qt-easy-build/Testing/Docker/test.sh \
-      -j 4 -c -q "5.9.1" \
+      -j 4 -c -q "5.10.0" \
       -t "module-qtbase module-qtbase-install_subtargets"
