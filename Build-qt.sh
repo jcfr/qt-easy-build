@@ -31,6 +31,16 @@ nbthreads=1
 confirmed=0
 qt_targets=
 
+# Check if building on MacOS or Linux
+SYSTEM="Linux"
+if [ "$(uname)" == "Darwin" ]
+then
+  SYSTEM="Darwin"
+fi
+
+export CFLAGS=""
+export CXXFLAGS=""
+
 show_help() {
 cat << EOF
 Usage: ${0##*/} [-h] [-c] [-j] [-s SYSROOT] [-d DEPLOYMENT_TARGET] [-a ARCHITECTURES] [-q QT_INSTALL_DIR] [-m CMAKE]
@@ -52,11 +62,23 @@ Options:
   -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
   -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
 
-MacOS only:
+Environment variables:
+
+  CFLAGS   [${CFLAGS}]
+  CXXFLAGS [${CXXFLAGS}]
+
+EOF
+
+if [ $SYSTEM == "Darwin" ]
+then
+  cat << EOF
+Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
   -d             OSX deployment target. [default: 10.8]
   -s             OSX sysroot. [default: macosx10.12]
+
 EOF
+fi
 }
 
 while [ $# -gt 0 ]; do
@@ -113,19 +135,18 @@ openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_P
 qt_archive=qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
 
-# Install directory
 cwd=$(pwd)
+
+# Dependencies directory
+deps_dir="$cwd/qt-everywhere-opensource-deps-$QT_VERSION"
+
+# Source and Build directory
+src_dir="$cwd/qt-everywhere-opensource-src-$QT_VERSION"
+
+# Install directory
 if [[ -z $install_dir ]]
 then
   install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
-fi
-
-# Check if building on MacOS or Linux
-# And verifies downloaded archives accordingly
-SYSTEM="Linux"
-if [ "$(uname)" == "Darwin" ]
-then
-  SYSTEM="Darwin"
 fi
 
 # If cmake path was not given, verify that it is available on the system
@@ -137,6 +158,24 @@ then
   then
     echo "cmake not found"
     exit 1
+  fi
+fi
+
+# Set macOS options
+if [ $SYSTEM == "Darwin" ]
+then
+  # MacOS
+  if [[ -z $osx_deployment_target ]]
+  then
+    osx_deployment_target=10.8
+  fi
+  if [[ -z $osx_sysroot ]]
+  then
+    osx_sysroot=macosx10.12
+  fi
+  if [[ -z $osx_architecture ]]
+  then
+    osx_architecture=x86_64
   fi
 fi
 
@@ -159,7 +198,24 @@ Download URLs:
 * Qt      : $qt_download_url
 * OpenSSL : $openssl_download_url
 
+Environment variables:
+
+  CFLAGS   [${CFLAGS}]
+  CXXFLAGS [${CXXFLAGS}]
+
 EOF
+
+if [ $SYSTEM == "Darwin" ]
+then
+  cat << EOF
+Script options (macOS):
+
+ -a OSX architectures ............................ $osx_architecture
+ -d OSX deployment target ........................ $osx_deployment_target
+ -s OSX sysroot .................................. $osx_sysroot
+
+EOF
+  fi
 }
 
 # Show summary and prompt user
@@ -182,13 +238,13 @@ fi
 if [ $clean -eq 1 ]
 then
   echo "Remove previous files and directories"
-  rm -rf zlib*
-  rm -f $openssl_archive
-  rm -rf openssl-$OPENSSL_VERSION
-  rm -f $qt_archive
-  rm -rf qt-everywhere-opensource-src-$QT_VERSION
-  rm -rf qt-everywhere-opensource-build-$QT_VERSION
+  rm -rf $deps_dir
+  rm -rf $src_dir
+  rm -rf $install_dir
 fi
+
+mkdir -p $deps_dir
+pushd $deps_dir
 
 # Download archives
 echo "Download openssl"
@@ -211,18 +267,6 @@ fi
 if [ $SYSTEM == "Darwin" ]
 then
   # MacOS
-  if [[ -z $osx_deployment_target ]]
-  then
-    osx_deployment_target=10.8
-  fi
-  if [[ -z $osx_sysroot ]]
-  then
-    osx_sysroot=macosx10.12
-  fi
-  if [[ -z $osx_architecture ]]
-  then
-    osx_architecture=x86_64
-  fi
   zlib_macos_options="-DCMAKE_OSX_ARCHITECTURES=$osx_architecture
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
@@ -291,6 +335,8 @@ then
 fi
 cd ..
 
+popd
+
 # Build Qt
 echo "Build Qt"
 
@@ -299,20 +345,21 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
+if [[ ! -d $src_dir ]]
 then
-  tar --no-same-owner -xf $qt_archive
+  tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
-cd qt-everywhere-opensource-src-$QT_VERSION
+cd $src_dir
+
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
   -c++std c++11 \
   -nomake examples \
   -nomake tests \
   -silent \
-  -openssl -I $cwd/openssl-$OPENSSL_VERSION/include           \
+  -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
-  -L $cwd/openssl-$OPENSSL_VERSION
+  -L $deps_dir/openssl-$OPENSSL_VERSION
 
 if [[ -z $qt_targets ]]
 then
