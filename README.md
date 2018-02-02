@@ -13,10 +13,10 @@ Scripts available for these Qt versions:
 [5100]: https://github.com/jcfr/qt-easy-build/tree/5.10.0#readme
 [487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
-| Qt Version   | Linux CI                      | macOS CI                      | Windows CI |
-|--------------|-------------------------------|-------------------------------|------------|
-| 5.10.0       | [![][5100_linux_i]][591_linux]| [![][5100_macos_i]][591_macos]| NA         |
-| 4.8.7        | [![][487_linux_i]][487_linux] | [![][487_macos_i]][487_macos] | NA         |
+| Qt Version   | Linux CI                        | macOS CI                        | Windows CI |
+|--------------|---------------------------------|---------------------------------|------------|
+| 5.10.0       | [![][5100_linux_i]][5100_linux] | [![][5100_macos_i]][5100_macos] | NA         |
+| 4.8.7        | [![][487_linux_i]][487_linux]   | [![][487_macos_i]][487_macos]   | NA         |
 
 
 [5100_linux]: https://circleci.com/gh/jcfr/qt-easy-build/tree/5.10.0
