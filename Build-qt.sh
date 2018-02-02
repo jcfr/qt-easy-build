@@ -160,8 +160,15 @@ openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_P
 qt_archive=qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/$qt_archive
 
-# Install directory
 cwd=$(pwd)
+
+# Dependencies directory
+deps_dir="$cwd/qt-everywhere-opensource-deps-$QT_VERSION"
+
+# Source and Build directory
+src_dir="$cwd/qt-everywhere-opensource-src-$QT_VERSION"
+
+# Install directory
 if [[ -z $install_dir ]]
 then
   install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
@@ -260,13 +267,13 @@ fi
 if [ $clean -eq 1 ]
 then
   echo "Remove previous files and directories"
-  rm -rf zlib*
-  rm -f $openssl_archive
-  rm -rf openssl-$OPENSSL_VERSION
-  rm -f $qt_archive
-  rm -rf qt-everywhere-opensource-src-$QT_VERSION
-  rm -rf qt-everywhere-opensource-build-$QT_VERSION
+  rm -rf $deps_dir
+  rm -rf $src_dir
+  rm -rf $install_dir
 fi
+
+mkdir -p $deps_dir
+pushd $deps_dir
 
 # Download archives
 echo "Download openssl"
@@ -357,6 +364,8 @@ then
 fi
 cd ..
 
+popd
+
 # Build Qt
 echo "Build Qt"
 
@@ -365,11 +374,11 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-if [[ ! -d qt-everywhere-opensource-src-$QT_VERSION ]]
+if [[ ! -d $src_dir ]]
 then
-  tar --no-same-owner -xf $qt_archive
+  tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
-cd qt-everywhere-opensource-src-$QT_VERSION
+cd $src_dir
 
 # Append flags
 if [[ ! -f mkspecs/common/gcc-base.conf.orig ]]; then
@@ -382,7 +391,10 @@ echo "QMAKE_CXXFLAGS += $CXXFLAGS" >> mkspecs/common/gcc-base.conf
 # If MacOS, patch linked from thread: https://github.com/Homebrew/legacy-homebrew/issues/40585
 if [ "$(uname)" == "Darwin" ]
 then
-  curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1
+  if [ ! -f $deps_dir/patch-7163a9ced64f12ae9444.applied ]
+  then
+    curl https://gist.githubusercontent.com/ejtttje/7163a9ced64f12ae9444/raw | patch -p1
+  fi
 fi
 
 ./configure $qt_install_dir_options                           \
@@ -390,9 +402,9 @@ fi
   -webkit -nomake examples -nomake demos                      \
   -silent                                                     \
   -no-phonon                                                  \
-  -openssl -I $cwd/openssl-$OPENSSL_VERSION/include           \
+  -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
-  -L $cwd/openssl-$OPENSSL_VERSION
+  -L $deps_dir/openssl-$OPENSSL_VERSION
 
 if [[ -z $qt_targets ]]
 then
