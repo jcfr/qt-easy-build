@@ -356,6 +356,7 @@ cd $src_dir
   -c++std c++11 \
   -nomake examples \
   -nomake tests \
+  -no-rpath \
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
