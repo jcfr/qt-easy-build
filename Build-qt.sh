@@ -59,7 +59,7 @@ Options:
   -h             Display this help and exit.
   -j             Number of threads for parallel build. [default: $nbthreads]
   -m             Path for cmake.
-  -q             Installation directory for Qt. [default: qt-everywhere-opensource-build-$QT_VERSION]
+  -q             Installation directory for Qt. [default: qt-everywhere-build-$QT_VERSION]
   -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
 
 Environment variables:
@@ -138,15 +138,15 @@ qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERS
 cwd=$(pwd)
 
 # Dependencies directory
-deps_dir="$cwd/qt-everywhere-opensource-deps-$QT_VERSION"
+deps_dir="$cwd/qt-everywhere-deps-$QT_VERSION"
 
 # Source and Build directory
-src_dir="$cwd/qt-everywhere-opensource-src-$QT_VERSION"
+src_dir="$cwd/qt-everywhere-src-$QT_VERSION"
 
 # Install directory
 if [[ -z $install_dir ]]
 then
-  install_dir="$cwd/qt-everywhere-opensource-build-$QT_VERSION"
+  install_dir="$cwd/qt-everywhere-build-$QT_VERSION"
 fi
 
 # If cmake path was not given, verify that it is available on the system

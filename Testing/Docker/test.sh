@@ -76,5 +76,5 @@ else
   /usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads} -t "$qt_targets"
 fi
 
-/usr/src/qt-easy-build-build/qt-everywhere-opensource-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+/usr/src/qt-easy-build-build/qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 

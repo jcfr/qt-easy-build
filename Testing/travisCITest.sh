@@ -33,7 +33,7 @@ die() {
 
 expected_qt_version="5.10.0"
 
-./qt-everywhere-opensource-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+./qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
 popd
 
