@@ -46,6 +46,15 @@ Scripts available for these Qt versions:
 [486]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 [485]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
+# Frequently Asked Questions
+
+**Why windows build stop with "The underlying connection was closed: An unexpected error occurred on a receive." ?**
+
+As explained [here](https://github.com/chocolatey/choco/wiki/Installation#installing-with-restricted-tls), this most likely happens because the build script is attempting to download from a server that needs to use TLS 1.1 or TLS 1.2 (has restricted the use of TLS 1.0 and SSL v3).
+
+Updating the version of `.NET` installed should help address the problem.
+See https://en.wikipedia.org/wiki/.NET_Framework_version_history#Overview
+
 # License
 
 Scripts in this repository are licensed under the Apache 2.0 License. See [LICENSE_Apache_20](LICENSE_Apache_20) file for details.
