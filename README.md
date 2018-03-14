@@ -52,8 +52,9 @@ Scripts available for these Qt versions:
 
 As explained [here](https://github.com/chocolatey/choco/wiki/Installation#installing-with-restricted-tls), this most likely happens because the build script is attempting to download from a server that needs to use TLS 1.1 or TLS 1.2 (has restricted the use of TLS 1.0 and SSL v3).
 
-Updating the version of `.NET` installed should help address the problem.
-See https://en.wikipedia.org/wiki/.NET_Framework_version_history#Overview
+To address the problem, you should update the version of `.NET` installed and install a newer version of PowerShell:
+* https://en.wikipedia.org/wiki/.NET_Framework_version_history#Overview
+* https://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx
 
 # License
 
