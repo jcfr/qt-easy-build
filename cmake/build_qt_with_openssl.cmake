@@ -21,6 +21,10 @@ endif()
 if(NOT QT_PLATFORM)
   message(FATAL_ERROR "QT_PLATFORM has not been set !")
 endif()
+if(NOT QT_VERSION MATCHES "^(4|5)$")
+  message(FATAL_ERROR "QT_VERSION incorrectly set to [${qtVersion}].
+Hint: '4' or '5' value is expected.")
+endif()
 if(NOT BITS MATCHES "^(32|64)$")
   message(FATAL_ERROR "BITS incorrectly set to [${BITS}].
 Hint: '32' or '64' value is expected.")
@@ -30,27 +34,50 @@ if(NOT EXISTS "${JOM_EXECUTABLE}")
 endif()
 message(STATUS "JOM_EXECUTABLE:${JOM_EXECUTABLE}")
 
-# Set compiler name based on Qt platform
-if(QT_PLATFORM STREQUAL "win32-msvc2013")
-  set(_compiler_name "vs2013")
-elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
-  set(_compiler_name "vs2012")
-elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
-  set(_compiler_name "vs2010")
-elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
-  set(_compiler_name "vs2008")
-else()
-  message(FATAL_ERROR "Specified QT_PLATFORM:${QT_PLATFORM} is not supported !")
+# Set compiler name based on qtVersion and qtPlatform
+if(QT_VERSION STREQUAL "5") #qt >=5.7 require a C++11 compliant compiler to build and use qt.
+  if(QT_PLATFORM STREQUAL "win32-msvc2017")
+    set(_compiler_name "vs2017")
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2015")
+    set(_compiler_name "vs2015")
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
+    set(_compiler_name "vs2013")
+  else()
+    message(FATAL_ERROR "qtVersion: [${QT_VERSION}] is not supported with qtPlatform: [${QT_PLATFORM}]")
+  endif()
+elseif(QT_VERSION STREQUAL "4")
+  if(QT_PLATFORM STREQUAL "win32-msvc2015")
+    set(_compiler_name "vs2015")
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2013")
+    set(_compiler_name "vs2013")
+  elseif(QT_PLATFORM STREQUAL "win32-msvc2012")
+    set(_compiler_name "vs2012")
+  # elseif(QT_PLATFORM STREQUAL "win32-msvc2010")
+  #   set(_compiler_name "vs2010")
+  # elseif(QT_PLATFORM STREQUAL "win32-msvc2008")
+  #   set(_compiler_name "vs2008")
+  else()
+    message(FATAL_ERROR "qtVersion: [${QT_VERSION}] is not supported with qtPlatform: [${QT_PLATFORM}]")
+  endif()
 endif()
 
-# Get OpenSSL binaries download URL and MD5
-qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.1h" OPENSSL_URL OPENSSL_MD5)
 
-set(QT_URL "http://packages.kitware.com/download/bitstream/8940/qt-everywhere-opensource-src-4.8.7.zip")
-set(QT_MD5 "0d3427d71aa0e8aec87288d7329e26cb")
+# Get OpenSSL binaries download URL and MD5
+qeb_get_openssl_binaries_download_url(${BITS} ${QT_PLATFORM} "1.0.2k" OPENSSL_URL OPENSSL_MD5)
+
+if(QT_VERSION STREQUAL "5")
+  set(QT_URL "http://download.qt.io/official_releases/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.zip")
+  set(QT_MD5 "1e372fabc9d97a32877cb4adb377e7c8")
+  set(_version_string "5.8.0")
+elseif(QT_VERSION STREQUAL "4")
+  # patch version fixes build errors when using msvc2015
+  set(QT_URL "http://packages.kitware.com/download/bitstream/10386/qt-everywhere-opensource-src-4.8.7-patch2015.zip")
+  set(QT_MD5 "dbdb0d130e9440d1360d20f767fec167")
+  set(_version_string "4.8.7")
+endif()
 string(TOLOWER ${CMAKE_BUILD_TYPE} qt_build_type)
 string(SUBSTRING ${qt_build_type} 0 3 _short_build_type)
-set(QT_BUILD_DIR "${DEST_DIR}/qt-4.8.7-${BITS}-${_compiler_name}-${_short_build_type}")
+set(QT_BUILD_DIR "${DEST_DIR}/qt-${_version_string}-${BITS}-${_compiler_name}-${_short_build_type}")
 
 # Set OpenSSL variables
 get_filename_component(_archive_name ${OPENSSL_URL} NAME)
@@ -172,11 +199,12 @@ execute_process(
     -DMODE=configure
     ${common_options}
     -DQT_PLATFORM=${QT_PLATFORM}
+    -DQT_VERSION=${QT_VERSION}
     -DQT_BUILD_TYPE=${qt_build_type}
     -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
     -DOPENSSL_LIBRARY_DIR=${OPENSSL_LIBRARY_DIR}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
-    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt5ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
   )
 if(NOT result_var EQUAL 0)
@@ -190,7 +218,7 @@ execute_process(
     ${common_options}
     -DQT_BUILD_DIR=${QT_BUILD_DIR}
     -DJOM_EXECUTABLE=${JOM_EXECUTABLE}
-    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt4ExternalProjectCommand.cmake
+    -P ${CMAKE_CURRENT_LIST_DIR}/QEBQt5ExternalProjectCommand.cmake
   RESULT_VARIABLE result_var
   )
 if(NOT result_var EQUAL 0)

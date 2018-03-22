@@ -9,7 +9,7 @@ foreach(p
 endforeach()
 
 #
-# QEBQt4ExternalProjectCommands
+# QEBQt5ExternalProjectCommands
 #
 
 set(usage
@@ -27,7 +27,7 @@ where `mode` is either configure or build.
 
 # Describe parameters (OPT) expected with each mode
 set(common_options USE_STEP_FILE)
-set(configure_options QT_PLATFORM QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIBRARY_DIR)
+set(configure_options QT_PLATFORM QT_VERSION QT_BUILD_TYPE QT_BUILD_DIR OPENSSL_INCLUDE_DIR OPENSSL_LIBRARY_DIR)
 set(build_options JOM_EXECUTABLE QT_BUILD_DIR)
 
 # Check if all options associated with the given mode are set.
@@ -72,18 +72,36 @@ if("${MODE}" STREQUAL "configure")
 
   string(TOLOWER ${QT_BUILD_TYPE} QT_BUILD_TYPE)
 
-  execute_process(
-    COMMAND ${QT_BUILD_DIR}/configure.exe
-      -opensource -confirm-license
-      -shared
-      -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
-      -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
-      -nomake examples
-      -nomake demos
-    WORKING_DIRECTORY ${QT_BUILD_DIR}
-    RESULT_VARIABLE result_var
-    )
+  if(QT_VERSION STREQUAL "5")
+    execute_process(
+      COMMAND ${QT_BUILD_DIR}/configure.bat
+        -opensource -confirm-license
+        -shared
+        -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
+        -opengl desktop
+        -no-angle
+        -skip qtwebengine 
+        # NOTE: To build QtWebEngine in Qt5.8, you need Visual Studio 2015 Update 3 (or later) & Windows 10 SDK 10.0.14393. (B/c Chromium requirements)
+        -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+        -nomake examples
+        -nomake tests
+      WORKING_DIRECTORY ${QT_BUILD_DIR}
+      RESULT_VARIABLE result_var
+      )
+  elseif(QT_VERSION STREQUAL "4")
+    execute_process(
+      COMMAND ${QT_BUILD_DIR}/configure.exe
+        -opensource -confirm-license
+        -shared
+        -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
+        -webkit
+        -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+        -nomake examples
+        -nomake demos
+      WORKING_DIRECTORY ${QT_BUILD_DIR}
+      RESULT_VARIABLE result_var
+      )
+  endif()
   if(result_var EQUAL 0)
     if(USE_STEP_FILE)
       file(WRITE ${step_file} "")
