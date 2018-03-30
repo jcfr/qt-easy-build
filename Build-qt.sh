@@ -65,6 +65,11 @@ $CXXFLAGS \
 -Wno-unused-but-set-variable"
 fi
 
+die() {
+  printf >&2 "$1\n"
+  exit 1
+}
+
 show_help() {
 cat << EOF
 Usage: ${0##*/} [-h] [-c] [-j] [-s SYSROOT] [-d DEPLOYMENT_TARGET] [-a ARCHITECTURES] [-q QT_INSTALL_DIR] [-m CMAKE]
@@ -153,6 +158,8 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
+
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
 openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
 
@@ -180,9 +187,16 @@ then
   cmake=`which cmake`
   if [ $? -ne 0 ]
   then
-    echo "cmake not found"
-    exit 1
+    die "error: 'cmake' not found ! ${command_not_found_install_hint}"
   fi
+fi
+
+if ! command -v curl &> /dev/null; then
+  die "error: 'curl' not found ! ${command_not_found_install_hint}"
+fi
+
+if ! command -v git &> /dev/null; then
+  die "error: 'git' not found ! ${command_not_found_install_hint}"
 fi
 
 # Set macOS options
@@ -256,8 +270,7 @@ then
   then
     confirmed=1
   else
-    echo "Aborting ..."
-    exit 1
+    die "Aborting ..."
   fi
 fi
 
@@ -310,13 +323,11 @@ else
 fi
 if [ "$md5_openssl" != "$OPENSSL_MD5" ]
 then
-  echo "MD5 mismatch. Problem downloading OpenSSL"
-  exit 1
+  die "MD5 mismatch. Problem downloading OpenSSL"
 fi
 if [ "$md5_qt" != "$QT_MD5" ]
 then
-  echo "MD5 mismatch. Problem downloading Qt"
-  exit 1
+  die "MD5 mismatch. Problem downloading Qt"
 fi
 
 # Build zlib
