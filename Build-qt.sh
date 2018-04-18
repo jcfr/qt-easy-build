@@ -360,9 +360,9 @@ if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
-cd $src_dir
+cd $install_dir
 
-./configure $qt_install_dir_options                           \
+$src_dir/configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
   -c++std c++11 \
   -nomake examples \
