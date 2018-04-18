@@ -65,7 +65,8 @@ Options:
   -j             Number of threads for parallel build. [default: $nbthreads]
   -m             Path for cmake.
   -q             Installation directory for Qt. [default: qt-everywhere-build-$QT_VERSION]
-  -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets")
+  -t             Specific Qt targets to build (e.g -t "module-qtbase module-qtbase-install_subtargets
+  -r             Recheck the configuration to pick up missing dependencies")
 
 Environment variables:
 
@@ -94,6 +95,9 @@ while [ $# -gt 0 ]; do
       ;;
     -c)
       clean=1
+      ;;
+    -r)
+      recheck="-recheck"
       ;;
     -q)
       install_dir=$2
@@ -399,3 +403,30 @@ else
   done
 fi
 
+# Now check whether webengine was at least configured
+#   we run a slightly-modified version of the config script
+#   which errors out on failure instead of simply logging.
+echo "Checking QtWebEngine"
+check_webengine=1
+cd $src_dir/qtwebengine
+cat <<EOS > test.pro
+  load(qt_parts)
+  load(configure)
+
+  runConfigure()
+
+  !isEmpty(skipBuildReason) {
+      SUBDIRS =
+      log($${skipBuildReason}$${EOL})
+      error(QtWebEngine will not be built.$${EOL})
+  }
+EOS
+check_webengine=`$qmake -o $(mktemp) test.pro`
+rm test.pro
+
+if [ "$check_webengine" -ne 0 ]; then
+  echo "QtWebEngine configuration failed. If your application requires QtWebEngine, \
+	please see the error message above, install any missing dependency, and run \
+	`Build.sh -r` to update the build."
+  exit 1
+fi
