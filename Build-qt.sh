@@ -147,13 +147,16 @@ cwd=$(pwd)
 # Dependencies directory
 deps_dir="$cwd/qt-everywhere-deps-$QT_VERSION"
 
-# Source and Build directory
+# Source directory
 src_dir="$cwd/qt-everywhere-src-$QT_VERSION"
+
+# Build directory
+bld_dir="$cwd/qt-everywhere-build-$QT_VERSION"
 
 # Install directory
 if [[ -z $install_dir ]]
 then
-  install_dir="$cwd/qt-everywhere-build-$QT_VERSION"
+  install_dir="$cwd/qt-everywhere-$QT_VERSION"
 fi
 
 # If cmake path was not given, verify that it is available on the system
@@ -253,6 +256,7 @@ then
   echo "Remove previous files and directories"
   rm -rf $deps_dir
   rm -rf $src_dir
+  rm -rf $bld_dir
   rm -rf $install_dir
 fi
 
@@ -348,11 +352,12 @@ cd ..
 
 popd
 
-# Build Qt
-echo "Build Qt"
+# Configure Qt
+echo "Configure Qt"
 
 cwd=$(pwd)
 
+mkdir -p $bld_dir
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
@@ -360,19 +365,30 @@ if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
-cd $src_dir
 
-./configure $qt_install_dir_options                           \
+cd $bld_dir
+
+$src_dir/configure $qt_install_dir_options $recheck \
   -release -opensource -confirm-license \
   -c++std c++11 \
   -nomake examples \
   -nomake tests \
   -no-rpath \
   -silent \
-  -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
-  ${qt_macos_options}                                         \
+  -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include \
+  ${qt_macos_options} \
   -L $deps_dir/openssl-$OPENSSL_VERSION
 
+# Checking for qmake
+qmake=$bld_dir/qtbase/bin/qmake
+if [[ ! -x $qmake ]]; then
+  echo "qmake build failed! '$qmake' does not exist."
+  exit 1
+fi
+
+# Build Qt
+echo "Building Qt"
+cd $bld_dir
 if [[ -z $qt_targets ]]
 then
   make -j $nbthreads
