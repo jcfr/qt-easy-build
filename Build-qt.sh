@@ -424,9 +424,8 @@ EOS
 check_webengine=`$qmake -o $(mktemp) test.pro`
 rm test.pro
 
-if [ "$check_webengine" -ne 0 ]; then
+if [[ "$check_webengine" -ne 0 ]]; then
   echo "QtWebEngine configuration failed. If your application requires QtWebEngine, \
-	please see the error message above, install any missing dependency, and run \
+	please see the error message(s) above, install any missing dependency, and run \
 	`Build.sh -r` to update the build."
-  exit 1
 fi
