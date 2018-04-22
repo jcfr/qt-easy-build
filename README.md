@@ -31,6 +31,18 @@ Windows
 1. Open desired Visual Studio Command Prompt (for 64 bit Qt, use the 64 bit Command Prompt, for 32 bit Qt, use the 32 bit Command Prompt)
 2. Paste the corresponding text from the box below and press enter.
 
+* Visual Studio 2015 64-bit Release
+
+```PowerShell
+@powershell -Command "$destDir='C:\D\Support';$buildType='Release';$qtPlatform='win32-msvc2015';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/huyu398/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+```
+
+* Visual Studio 2015 64-bit Debug
+
+```PowerShell
+@powershell -Command "$destDir='C:\D\Support';$buildType='Debug';$qtPlatform='win32-msvc2015';$bits='64';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/huyu398/qt-easy-build/4.8.7/windows_build_qt.ps1'))"
+```
+
 * Visual Studio 2013 64-bit Release
 
 ```PowerShell
