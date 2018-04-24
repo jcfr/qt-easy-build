@@ -56,6 +56,10 @@ To address the problem, you should update the version of `.NET` installed and in
 * https://en.wikipedia.org/wiki/.NET_Framework_version_history#Overview
 * https://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx
 
+** Why does linux build stop with `curl: (35) SSL connect error`?**
+
+TLS auto-negotation may fail on older Linux versions. Try adding `--tlsv1.2` to the `curl` invocations in `Build-qt.sh`.
+
 # License
 
 Scripts in this repository are licensed under the Apache 2.0 License. See [LICENSE_Apache_20](LICENSE_Apache_20) file for details.
