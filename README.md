@@ -48,7 +48,7 @@ Scripts available for these Qt versions:
 
 # Frequently Asked Questions
 
-**Why windows build stop with "The underlying connection was closed: An unexpected error occurred on a receive." ?**
+**Why does the windows build stop with "The underlying connection was closed: An unexpected error occurred on a receive." ?**
 
 As explained [here](https://github.com/chocolatey/choco/wiki/Installation#installing-with-restricted-tls), this most likely happens because the build script is attempting to download from a server that needs to use TLS 1.1 or TLS 1.2 (has restricted the use of TLS 1.0 and SSL v3).
 
@@ -56,7 +56,7 @@ To address the problem, you should update the version of `.NET` installed and in
 * https://en.wikipedia.org/wiki/.NET_Framework_version_history#Overview
 * https://social.technet.microsoft.com/wiki/contents/articles/21016.how-to-install-windows-powershell-4-0.aspx
 
-** Why does linux build stop with `curl: (35) SSL connect error`?**
+**Why does the linux build stop with `curl: (35) SSL connect error`?**
 
 TLS auto-negotation may fail on older Linux versions. Try adding `--tlsv1.2` to the `curl` invocations in `Build-qt.sh`.
 
