@@ -356,6 +356,12 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
+no_rpath_option=
+if [ "$(uname)" == "Darwin" ]
+then
+  no_rpath_option="-no-rpath"
+fi
+
 if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
@@ -367,7 +373,7 @@ cd $src_dir
   -c++std c++11 \
   -nomake examples \
   -nomake tests \
-  -no-rpath \
+  $no_rpath_option \
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
