@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.11.0)
 
 foreach(p
   CMP0054 # CMake 3.1
@@ -9,7 +9,7 @@ foreach(p
 endforeach()
 
 #
-# QEBQt4ExternalProjectCommands
+# QEBQt5ExternalProjectCommands
 #
 
 set(usage
@@ -73,14 +73,15 @@ if("${MODE}" STREQUAL "configure")
   string(TOLOWER ${QT_BUILD_TYPE} QT_BUILD_TYPE)
 
   execute_process(
-    COMMAND ${QT_BUILD_DIR}/configure.exe
-      -opensource -confirm-license
-      -shared
-      -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
-      -webkit
-      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+    COMMAND ${QT_BUILD_DIR}/configure.bat
+      -release -opensource -confirm-license
+      -c++std c++11
       -nomake examples
-      -nomake demos
+      -nomake tests
+      -silent
+      -openssl -I ${OPENSSL_INCLUDE_DIR} -L ${OPENSSL_LIBRARY_DIR}
+      -platform ${QT_PLATFORM} -${QT_BUILD_TYPE}
+      
     WORKING_DIRECTORY ${QT_BUILD_DIR}
     RESULT_VARIABLE result_var
     )
