@@ -118,26 +118,26 @@ $cmake = Join-Path $cmakeInstallDir 'bin\cmake.exe'
 # download cross-platform build script
 $qtBuildScriptName = 'build_qt_with_openssl.cmake'
 $qtBuildScriptFile = Join-Path $destDir $qtBuildScriptName
-$url = ('https://raw.githubusercontent.com/huyu398/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $qtBuildScriptName)
 Always-Download-File $url $qtBuildScriptFile
 
 # download cross-platform helper script(s)
 $scriptName = 'QEBGetOpenSSLBinariesDownloadURL.cmake'
 $scriptFile = Join-Path $destDir $scriptName
-$url = ('https://raw.githubusercontent.com/huyu398/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
 Always-Download-File $url $scriptFile
 
 # download cross-platform helper script(s)
 $scriptName = 'QEBQt4ExternalProjectCommand.cmake'
 $scriptFile = Join-Path $destDir $scriptName
-$url = ('https://raw.githubusercontent.com/huyu398/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+$url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
 Always-Download-File $url $scriptFile
 
 # download patch file if Visual Studio 2015
 if($qtPlatform -eq "win32-msvc2015") {
   $scriptName = 'patch_for_win32-msvc2015.diff'
   $scriptFile = Join-Path $destDir $scriptName
-  $url = ('https://raw.githubusercontent.com/huyu398/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
+  $url = ('https://raw.githubusercontent.com/jcfr/qt-easy-build/' + $qtBuildScriptVersion + '/cmake/' + $scriptName)
   Always-Download-File $url $scriptFile
 }
 
