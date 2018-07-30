@@ -7,7 +7,7 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.10.0
+QT_VERSION=5.11.1
 
 # OpenSSL version
 OPENSSL_VERSION=1.0.2n
@@ -15,7 +15,7 @@ OPENSSL_MIDAS_PACKAGES_ITEM=10337
 
 # MD5 checksums
 OPENSSL_MD5="13bdc1b1d1ff39b6fd42a255e74676a4"
-QT_MD5="c5e275ab0ed7ee61d0f4b82cd471770d"
+QT_MD5="c6f0854d7de7bde80cfd8cc85bb7152b"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
