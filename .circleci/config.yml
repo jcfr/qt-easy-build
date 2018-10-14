@@ -22,6 +22,29 @@ jobs:
               libx11-xcb-dev \
               libxcb-glx0-dev
       - run:
+          name: Install XCB requirements
+          command: |
+            # See http://doc.qt.io/qt-5/linux-requirements.html
+            apt-get update && apt-get install -y \
+              libxcb-keysyms1-dev \
+              libxcb-image0-dev \
+              libxcb-shm0-dev \
+              libxcb-icccm4-dev \
+              libxcb-sync0-dev \
+              libxcb-xfixes0-dev \
+              libxcb-shape0-dev \
+              libxcb-randr0-dev \
+              libxcb-render-util0-dev
+      - run:
+          name: Install WebEngine requirements
+          command: |
+            # See https://doc.qt.io/qt-5/qtwebengine-platform-notes.html#all-platforms
+            apt-get install -y \
+              python \
+              gperf \
+              bison \
+              flex
+      - run:
           name: Test qt-easy-build.sh
           command: |
             cd /work
