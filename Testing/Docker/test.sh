@@ -3,6 +3,12 @@
 set -e
 set -o pipefail
 
+script_dir=$(cd $(dirname $0) || exit 1; pwd)
+
+src_dir=$(readlink --canonicalize $script_dir/../../)
+
+current_dir=$(pwd)
+
 # This is a script to test that qt compiled
 # Docker container.
 
@@ -71,10 +77,10 @@ fi
 
 if [[ -z $qt_targets ]]
 then
-  /usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads}
+  $src_dir/Build-qt.sh -y $clean_arg -j ${nbthreads}
 else
-  /usr/src/qt-easy-build/Build-qt.sh -y $clean_arg -j ${nbthreads} -t "$qt_targets"
+  $src_dir/Build-qt.sh -y $clean_arg -j ${nbthreads} -t "$qt_targets"
 fi
 
-/usr/src/qt-easy-build-build/qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+$current_dir/qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
