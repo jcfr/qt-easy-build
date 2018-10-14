@@ -7,15 +7,15 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.10.0
+QT_VERSION=5.11.2
 
 # OpenSSL version
-OPENSSL_VERSION=1.0.2n
-OPENSSL_MIDAS_PACKAGES_ITEM=10337
+OPENSSL_VERSION=1.0.2p
+#OPENSSL_MIDAS_PACKAGES_ITEM=10337
 
-# MD5 checksums
-OPENSSL_MD5="13bdc1b1d1ff39b6fd42a255e74676a4"
-QT_MD5="c5e275ab0ed7ee61d0f4b82cd471770d"
+# Checksums
+OPENSSL_SHA256="50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
+QT_MD5="152a8ade9c11fe33ff5bc95310a1bb64"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -79,7 +79,7 @@ then
   cat << EOF
 Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.8]
+  -d             OSX deployment target. [default: 10.10]
   -s             OSX sysroot. [default: macosx10.12]
 
 EOF
@@ -137,7 +137,8 @@ done
 command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
+#openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
+openssl_download_url=https://www.openssl.org/source/$openssl_archive
 
 qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
@@ -181,7 +182,7 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.8
+    osx_deployment_target=10.10
   fi
   if [[ -z $osx_sysroot ]]
   then
@@ -286,16 +287,16 @@ then
   export KERNEL_BITS=64
   qt_macos_options="-sdk $osx_sysroot"
 
-  md5_openssl=`md5 ./$openssl_archive | awk '{ print $4 }'`
+  sha256_openssl=`shasum -a 256 ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
 else
   # Linux
-  md5_openssl=`md5sum ./$openssl_archive | awk '{ print $1 }'`
+  sha256_openssl=`sha256sum ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5sum ./$qt_archive | awk '{ print $1 }'`
 fi
-if [ "$md5_openssl" != "$OPENSSL_MD5" ]
+if [ "$sha256_openssl" != "$OPENSSL_SHA256" ]
 then
-  die "MD5 mismatch. Problem downloading OpenSSL"
+  die "SHA256 mismatch. Problem downloading OpenSSL"
 fi
 if [ "$md5_qt" != "$QT_MD5" ]
 then
