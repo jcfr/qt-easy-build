@@ -1,0 +1,36 @@
+
+jobs:
+  ubuntu1804:
+    working_directory: /work/qt-easy-build
+    docker:
+      - image: dockbuild/ubuntu1804:latest
+    steps:
+      - checkout
+      - run:
+          name: Install requirements
+          command: |
+            # See http://doc.qt.io/qt-5/linux-requirements.html
+            apt-get update && apt-get install -y \
+              libfontconfig1-dev \
+              libfreetype6-dev \
+              libx11-dev \
+              libxext-dev \
+              libxfixes-dev \
+              libxi-dev \
+              libxrender-dev \
+              libxcb1-dev \
+              libx11-xcb-dev \
+              libxcb-glx0-dev
+      - run:
+          name: Test qt-easy-build.sh
+          command: |
+            cd /work
+            /work/qt-easy-build/Testing/Docker/test.sh \
+              -j 4 -c -q "5.10.0" \
+              -t "module-qtbase module-qtbase-install_subtargets"
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - ubuntu1804
