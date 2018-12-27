@@ -187,6 +187,11 @@ then
   if [[ -z $osx_sysroot ]]
   then
     osx_sysroot=macosx10.12
+    if [[ ! -d /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/${osx_sysroot} ]]; then
+       echo "ERROR: Invalid osx_sysroot, can not find ${osx_sysroot} in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs"
+       ls -d /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/*
+       return -1;
+    fi
   fi
   if [[ -z $osx_architecture ]]
   then
