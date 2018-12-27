@@ -7,7 +7,7 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.10.0
+QT_VERSION=5.12.0
 
 # OpenSSL version
 OPENSSL_VERSION=1.0.2n
@@ -15,7 +15,7 @@ OPENSSL_MIDAS_PACKAGES_ITEM=10337
 
 # MD5 checksums
 OPENSSL_MD5="13bdc1b1d1ff39b6fd42a255e74676a4"
-QT_MD5="c5e275ab0ed7ee61d0f4b82cd471770d"
+QT_MD5="af569de3eb42da4457b0897e5759dc91"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -181,7 +181,7 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.8
+    osx_deployment_target=10.12
   fi
   if [[ -z $osx_sysroot ]]
   then
@@ -299,7 +299,7 @@ then
 fi
 if [ "$md5_qt" != "$QT_MD5" ]
 then
-  die "MD5 mismatch. Problem downloading Qt"
+  die "MD5 mismatch. Problem downloading Qt. $md5_qt"
 fi
 
 # Build zlib
