@@ -11,4 +11,6 @@
 # Libraries
 openssl-*
 qt-everywhere-opensource-*
+qt-everywhere-deps-*
+qt-everywhere-src-*
 zlib*
