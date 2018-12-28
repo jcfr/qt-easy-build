@@ -283,7 +283,7 @@ then
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
   export KERNEL_BITS=64
-  qt_macos_options="-sdk $osx_sysroot"
+  qt_macos_options="-sdk $osx_sysroot -webengine-spellchecker -webengine-native-spellchecker"
 
   sha256_openssl=`shasum -a 256 ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
@@ -355,27 +355,26 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-no_rpath_option=
-if [ "$(uname)" == "Darwin" ]
-then
-  no_rpath_option="-no-rpath"
-fi
-
 if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
 cd $src_dir
 
+# Options used to mimic the homebrew packaging of Qt5
+#qt_homebrew_package_options="-system-zlib -qt-libpng -qt-libjpeg -qt-freetype -qt-pcre -dbus-runtime -proprietary-codecs"
+qt_build_mode="-silent"
+qt_build_mode="-verbose"
+
+# NOTE:  C++14 is needed to support QtWebEngine from chromium
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
   -c++std c++14 \
   -nomake examples \
   -nomake tests \
-  $no_rpath_option \
+  -no-rpath \
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
-  -no-webengine-spellchecker  \
   ${qt_macos_options}                                         \
   -L $deps_dir/openssl-$OPENSSL_VERSION
 
