@@ -10,11 +10,11 @@ set -o pipefail
 QT_VERSION=5.12.0
 
 # OpenSSL version
-OPENSSL_VERSION=1.0.2n
-OPENSSL_MIDAS_PACKAGES_ITEM=10337
+OPENSSL_VERSION=1.0.2p
+#OPENSSL_MIDAS_PACKAGES_ITEM=10337
 
-# MD5 checksums
-OPENSSL_MD5="13bdc1b1d1ff39b6fd42a255e74676a4"
+# Checksums
+OPENSSL_SHA256="50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
 QT_MD5="af569de3eb42da4457b0897e5759dc91"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
@@ -79,7 +79,7 @@ then
   cat << EOF
 Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.8]
+  -d             OSX deployment target. [default: 10.10]
   -s             OSX sysroot. [default: macosx10.12]
 
 EOF
@@ -137,7 +137,8 @@ done
 command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
+#openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
+openssl_download_url=https://www.openssl.org/source/$openssl_archive
 
 qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
@@ -284,22 +285,22 @@ then
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
   export KERNEL_BITS=64
-  qt_macos_options="-sdk $osx_sysroot"
+  qt_macos_options="-sdk $osx_sysroot -webengine-spellchecker -webengine-native-spellchecker"
 
-  md5_openssl=`md5 ./$openssl_archive | awk '{ print $4 }'`
+  sha256_openssl=`shasum -a 256 ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
 else
   # Linux
-  md5_openssl=`md5sum ./$openssl_archive | awk '{ print $1 }'`
+  sha256_openssl=`sha256sum ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5sum ./$qt_archive | awk '{ print $1 }'`
 fi
-if [ "$md5_openssl" != "$OPENSSL_MD5" ]
+if [ "$sha256_openssl" != "$OPENSSL_SHA256" ]
 then
-  die "MD5 mismatch. Problem downloading OpenSSL"
+  die "SHA256 mismatch. Problem downloading OpenSSL"
 fi
 if [ "$md5_qt" != "$QT_MD5" ]
 then
-  die "MD5 mismatch. Problem downloading Qt. $md5_qt"
+  die "MD5 mismatch. Problem downloading Qt"
 fi
 
 # Build zlib
@@ -356,27 +357,26 @@ cwd=$(pwd)
 mkdir -p $install_dir
 qt_install_dir_options="-prefix $install_dir"
 
-no_rpath_option=
-if [ "$(uname)" == "Darwin" ]
-then
-  no_rpath_option="-no-rpath"
-fi
-
 if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
 fi
 cd $src_dir
 
+# Options used to mimic the homebrew packaging of Qt5
+#qt_homebrew_package_options="-system-zlib -qt-libpng -qt-libjpeg -qt-freetype -qt-pcre -dbus-runtime -proprietary-codecs"
+qt_build_mode="-silent"
+qt_build_mode="-verbose"
+
+# NOTE:  C++14 is needed to support QtWebEngine from chromium
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
-  -c++std c++11 \
+  -c++std c++14 \
   -nomake examples \
   -nomake tests \
-  $no_rpath_option \
+  -no-rpath \
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
-  -no-webengine-spellchecker  \
   ${qt_macos_options}                                         \
   -L $deps_dir/openssl-$OPENSSL_VERSION
 
