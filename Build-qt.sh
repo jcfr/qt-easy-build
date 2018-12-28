@@ -376,6 +376,7 @@ cd $src_dir
   $no_rpath_option \
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
+  -no-webengine-spellchecker  \
   ${qt_macos_options}                                         \
   -L $deps_dir/openssl-$OPENSSL_VERSION
 
