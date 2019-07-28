@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 set -o pipefail
 
 #
@@ -365,7 +365,7 @@ cd $src_dir
 
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
-  -c++std c++11 \
+  -c++std c++14 \
   -nomake examples \
   -nomake tests \
   -no-rpath \
