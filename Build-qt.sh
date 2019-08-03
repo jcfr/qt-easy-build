@@ -10,11 +10,10 @@ set -o pipefail
 QT_VERSION=5.12.4
 
 # OpenSSL version
-OPENSSL_VERSION=1.0.2p
-#OPENSSL_MIDAS_PACKAGES_ITEM=10337
+OPENSSL_VERSION=1.1.1c
 
 # Checksums
-OPENSSL_SHA256="50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
+OPENSSL_SHA256="f6fb3079ad15076154eda9413fed42877d668e7069d9b87396d0804fdb3f4c90"
 QT_MD5="dda95b0239d13c5276834177af3a8588"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
@@ -137,7 +136,6 @@ done
 command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-#openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
 openssl_download_url=https://www.openssl.org/source/$openssl_archive
 
 qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
