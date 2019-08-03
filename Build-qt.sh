@@ -7,7 +7,7 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.11.2
+QT_VERSION=5.12.4
 
 # OpenSSL version
 OPENSSL_VERSION=1.0.2p
@@ -15,7 +15,7 @@ OPENSSL_VERSION=1.0.2p
 
 # Checksums
 OPENSSL_SHA256="50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
-QT_MD5="152a8ade9c11fe33ff5bc95310a1bb64"
+QT_MD5="dda95b0239d13c5276834177af3a8588"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -79,7 +79,7 @@ then
   cat << EOF
 Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.10]
+  -d             OSX deployment target. [default: 10.12]
   -s             OSX sysroot. [default: macosx10.12]
 
 EOF
@@ -182,7 +182,7 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.10
+    osx_deployment_target=10.12
   fi
   if [[ -z $osx_sysroot ]]
   then
