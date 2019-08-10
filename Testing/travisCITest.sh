@@ -14,9 +14,9 @@ then
   -c \
   -j 4 \
   -y \
-  -s macosx10.11 \
+  -s macosx10.13 \
   -a x86_64 \
-  -d 10.9 \
+  -d 10.12 \
   -t "module-qtbase module-qtbase-install_subtargets"
 else
   $script_dir/../Build-qt.sh \
