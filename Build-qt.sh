@@ -79,7 +79,7 @@ then
 Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
   -d             OSX deployment target. [default: 10.12]
-  -s             OSX sysroot. [default: macosx10.12]
+  -s             OSX sysroot. [default: macosx10.13]
 
 EOF
 fi
@@ -184,7 +184,7 @@ then
   fi
   if [[ -z $osx_sysroot ]]
   then
-    osx_sysroot=macosx10.12
+    osx_sysroot=macosx10.13
   fi
   if [[ -z $osx_architecture ]]
   then
