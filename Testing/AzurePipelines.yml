@@ -1,0 +1,129 @@
+name: qt-easy-build
+trigger:
+  branches:
+    include:
+    - 5.12.*
+jobs:
+  - job: Linux
+    timeoutInMinutes: 0
+    cancelTimeoutInMinutes: 300
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    steps:
+      - checkout: self
+        clean: true
+        fetchDepth: 5
+      - script: |
+          sudo apt-get install libclang-dev -y
+        displayName: 'Install QDoc Requirements'
+      - script: |
+          # https://doc-snapshots.qt.io/qt5-5.12/linux.html
+          sudo apt-get install build-essential libgl1-mesa-dev -y
+        displayName: 'Install Qt Requirements for Development'
+      - script: |
+          # https://doc.qt.io/qt-5.12/qtwebengine-platform-notes.html#all-platforms
+          sudo apt-get install bison flex gperf -y
+          # https://doc.qt.io/qt-5.12/qtwebengine-platform-notes.html#linux
+          sudo apt-get install libdbus-1-dev libnss3-dev libfontconfig1-dev -y
+          # Qt WebEngine for xcb
+          sudo apt-get install libdrm-dev libxcomposite-dev libxcursor-dev libxi-dev libxrandr-dev libxss-dev libxtst-dev -y
+          # Qt WebEngine other development packages
+          sudo apt-get install libegl1-mesa-dev -y # suggested when build failed to find khronos development headers
+          sudo apt-get install libcap-dev -y
+        displayName: 'Install Qt WebEngine Requirements for Development'
+      - bash: |
+          set -e
+          set -o pipefail
+
+          c++ --version
+          cmake --version
+
+          script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+          pushd $script_dir
+
+          $(Build.SourcesDirectory)/Build-qt.sh \
+          -c \
+          -j 4 \
+          -y
+
+          die() {
+            echo "Error: $@" 1>&2
+            exit 1;
+          }
+
+          expected_qt_version="5.12.7"
+
+          ./qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+
+          popd
+
+  - job: macOS
+    timeoutInMinutes: 0
+    cancelTimeoutInMinutes: 300
+    strategy:
+        maxParallel: 4
+        matrix:
+          # https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/macos/macos-10.14-Readme.md
+          # https://github.com/Microsoft/azure-pipelines-image-generation/blob/master/images/macos/macos-10.13-Readme.md
+          XCode_10:
+            imageName: 'macos-10.14'
+            xcodeVersion: 10.2
+            sdk: 'macosx10.14'
+            deploymentTarget: '10.14'
+          XCode_9_4:
+            imageName: 'macos-10.14'
+            xcodeVersion: 9.4.1
+            sdk: 'macosx10.13'
+            deploymentTarget: '10.13'
+          XCode_9_3:
+            imageName: 'macos-10.13'
+            xcodeVersion: 9.3
+            sdk: 'macosx10.13'
+            deploymentTarget: '10.12'
+    pool:
+      vmImage: $(imageName)
+    steps:
+      - checkout: self
+        clean: true
+        fetchDepth: 5
+      - script: |
+          brew install llvm
+        displayName: 'Install QDoc Requirements'
+      - bash: |
+          set -e
+          set -o pipefail
+
+          xcode-select -p
+          sudo xcode-select -s /Applications/Xcode_$(xcodeVersion).app/Contents/Developer/
+          xcode-select -p
+          c++ --version
+          cmake --version
+
+          if [[ $(imageName) == 'macos-10.14' ]] && [[ $(xcodeVersion) == 9.4.1 ]]
+          then
+            sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+          fi
+
+          script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+          pushd $script_dir
+
+          $(Build.SourcesDirectory)/Build-qt.sh \
+          -c \
+          -j 4 \
+          -y \
+          -s $(sdk) \
+          -a x86_64 \
+          -d $(deploymentTarget)
+
+          die() {
+            echo "Error: $@" 1>&2
+            exit 1;
+          }
+
+          expected_qt_version="5.12.7"
+
+          ./qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
+
+          popd
