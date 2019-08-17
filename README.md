@@ -7,40 +7,39 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 
 Scripts available for these Qt versions:
 
-* [5.10.0][5100]
+* [5.12.7][5127]
 * [4.8.7][487]
 
-[5100]: https://github.com/jcfr/qt-easy-build/tree/5.10.0#readme
+[5127]: https://github.com/jcfr/qt-easy-build/tree/5.12.7#readme
 [487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
-| Qt Version   | Linux CI                        | macOS CI                        | Windows CI |
-|--------------|---------------------------------|---------------------------------|------------|
-| 5.10.0       | [![][5100_linux_i]][5100_linux] | [![][5100_macos_i]][5100_macos] | NA         |
-| 4.8.7        | [![][487_linux_i]][487_linux]   | [![][487_macos_i]][487_macos]   | NA         |
+| Qt Version   | Linux                                                   | macOS                                                   | Windows CI |
+|--------------|---------------------------------------------------------|---------------------------------------------------------|------------|
+| 5.12.7       | [![Build Status][5127_linux_i_azure]][5127_linux_azure] | [![Build Status][5127_macos_i_azure]][5127_macos_azure] | [![Build Status][5127_windows_i_azure]][5127_windows_azure]         |
+| 4.8.7        | NA                                                      | NA                                                      | NA         |
 
+[5127_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
+[5127_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=Linux
 
-[5100_linux]: https://circleci.com/gh/jcfr/qt-easy-build/tree/5.10.0
-[5100_linux_i]: https://circleci.com/gh/jcfr/qt-easy-build/tree/5.10.0.svg?style=svg
+[5127_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
+[5127_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=macOS
 
-[487_linux]: https://circleci.com/gh/jcfr/qt-easy-build/tree/4.8.7
-[487_linux_i]: https://circleci.com/gh/jcfr/qt-easy-build/tree/4.8.7.svg?style=svg
-
-[5100_macos]: https://travis-ci.org/jcfr/qt-easy-build
-[5100_macos_i]: https://travis-ci.org/jcfr/qt-easy-build.svg?branch=5.10.0
-
-[487_macos]: https://travis-ci.org/jcfr/qt-easy-build
-[487_macos_i]: https://travis-ci.org/jcfr/qt-easy-build.svg?branch=4.8.7
-
+[5127_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
+[5127_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=Windows
 
 # Unmaintained Qt build scripts
 
 Scripts available for these Qt versions:
 
+* [5.11.2][5112]
+* [5.10.0][5100]
 * [5.9.1][591]
 * [5.7.1][571]
 * [4.8.6][486]
 * [4.8.5][485]
 
+[5112]: https://github.com/jcfr/qt-easy-build/tree/5.11.2#readme
+[5100]: https://github.com/jcfr/qt-easy-build/tree/5.10.0#readme
 [591]: https://github.com/jcfr/qt-easy-build/tree/5.9.1#readme
 [571]: https://github.com/jcfr/qt-easy-build/tree/5.7.1#readme
 [486]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
