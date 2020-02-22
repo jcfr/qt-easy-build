@@ -7,15 +7,14 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.11.2
+QT_VERSION=5.12.7
 
 # OpenSSL version
-OPENSSL_VERSION=1.0.2p
-#OPENSSL_MIDAS_PACKAGES_ITEM=10337
+OPENSSL_VERSION=1.1.1d
 
 # Checksums
-OPENSSL_SHA256="50a98e07b1a89eb8f6a99477f262df71c6fa7bef77df4dc83025a2845c827d00"
-QT_MD5="152a8ade9c11fe33ff5bc95310a1bb64"
+OPENSSL_SHA256="1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
+QT_MD5="ce2c5661c028b9de6183245982d7c120"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -79,8 +78,8 @@ then
   cat << EOF
 Options (macOS):
   -a             Set OSX architectures. (expected values: x86_64 or i386) [default: x86_64]
-  -d             OSX deployment target. [default: 10.10]
-  -s             OSX sysroot. [default: macosx10.12]
+  -d             OSX deployment target. [default: 10.12]
+  -s             OSX sysroot. [default: macosx10.13]
 
 EOF
 fi
@@ -137,7 +136,6 @@ done
 command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-#openssl_download_url=https://packages.kitware.com/download/item/$OPENSSL_MIDAS_PACKAGES_ITEM/$openssl_archive
 openssl_download_url=https://www.openssl.org/source/$openssl_archive
 
 qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
@@ -182,11 +180,11 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.10
+    osx_deployment_target=10.12
   fi
   if [[ -z $osx_sysroot ]]
   then
-    osx_sysroot=macosx10.12
+    osx_sysroot=macosx10.13
   fi
   if [[ -z $osx_architecture ]]
   then
@@ -285,7 +283,7 @@ then
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
   export KERNEL_BITS=64
-  qt_macos_options="-sdk $osx_sysroot"
+  qt_macos_options="-sdk $osx_sysroot -webengine-spellchecker -webengine-native-spellchecker"
 
   sha256_openssl=`shasum -a 256 ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
@@ -363,6 +361,12 @@ then
 fi
 cd $src_dir
 
+# Options used to mimic the homebrew packaging of Qt5
+#qt_homebrew_package_options="-system-zlib -qt-libpng -qt-libjpeg -qt-freetype -qt-pcre -dbus-runtime -proprietary-codecs"
+qt_build_mode="-silent"
+qt_build_mode="-verbose"
+
+# NOTE:  C++14 is needed to support QtWebEngine from chromium
 ./configure $qt_install_dir_options                           \
   -release -opensource -confirm-license \
   -c++std c++14 \

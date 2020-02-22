@@ -9,7 +9,7 @@ Linux and macOS
 1. Open a terminal and copy the text below:
 
 ```
-curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.11.2/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
+curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.12.7/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
 ./Build-qt.sh -j 4
 ```
 
@@ -74,6 +74,8 @@ Windows
 ```
 
 ### Notes ###
+
+* the minimum glibc version [supported by QtWebEngine is 2.17](https://github.com/qt/qtwebengine/commit/6d9fe6ba35024efc8e0a26435b51e25aa3ea7f09#diff-fb760d5130a8d1bf9c6f4be03ebcdc20). This excludes building QtWebEngine on less than CentOS 7, for example (local glibc version may be checked with `ldd --version`).
 
 * `buildType` can be set to either 'Release' or 'Debug'
 
