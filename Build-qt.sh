@@ -136,7 +136,7 @@ done
 command_not_found_install_hint="\n=> Consider installing the program using a package manager (apt-get, yum, homebrew, ...)"
 
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
-openssl_download_url=https://www.openssl.org/source/$openssl_archive
+openssl_download_url=https://www.openssl.org/source/old/1.1.1/$openssl_archive
 
 qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
 qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
