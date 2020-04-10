@@ -76,11 +76,6 @@ jobs:
             xcodeVersion: 9.4.1
             sdk: 'macosx10.13'
             deploymentTarget: '10.13'
-          XCode_9_3:
-            imageName: 'macos-10.13'
-            xcodeVersion: 9.3
-            sdk: 'macosx10.13'
-            deploymentTarget: '10.12'
     pool:
       vmImage: $(imageName)
     steps:
