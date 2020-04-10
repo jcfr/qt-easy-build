@@ -7,14 +7,14 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.12.7
+QT_VERSION=5.12.8
 
 # OpenSSL version
 OPENSSL_VERSION=1.1.1d
 
 # Checksums
 OPENSSL_SHA256="1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
-QT_MD5="ce2c5661c028b9de6183245982d7c120"
+QT_MD5="8ec2a0458f3b8e9c995b03df05e006e4"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 

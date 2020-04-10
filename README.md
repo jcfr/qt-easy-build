@@ -9,7 +9,7 @@ Linux and macOS
 1. Open a terminal and copy the text below:
 
 ```
-curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.12.7/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
+curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.12.8/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
 ./Build-qt.sh -j 4
 ```
 
