@@ -7,25 +7,25 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 
 Scripts available for these Qt versions:
 
-* [5.12.7][5127]
+* [5.12.8][5128]
 * [4.8.7][487]
 
-[5127]: https://github.com/jcfr/qt-easy-build/tree/5.12.7#readme
+[5128]: https://github.com/jcfr/qt-easy-build/tree/5.12.8#readme
 [487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
 | Qt Version   | Linux                                                   | macOS                                                   | Windows CI |
 |--------------|---------------------------------------------------------|---------------------------------------------------------|------------|
-| 5.12.7       | [![Build Status][5127_linux_i_azure]][5127_linux_azure] | [![Build Status][5127_macos_i_azure]][5127_macos_azure] | [![Build Status][5127_windows_i_azure]][5127_windows_azure]         |
+| 5.12.8       | [![Build Status][5128_linux_i_azure]][5128_linux_azure] | [![Build Status][5128_macos_i_azure]][5128_macos_azure] | [![Build Status][5128_windows_i_azure]][5128_windows_azure]         |
 | 4.8.7        | NA                                                      | NA                                                      | NA         |
 
-[5127_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
-[5127_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=Linux
+[5128_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.8
+[5128_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.8&jobName=Linux
 
-[5127_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
-[5127_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=macOS
+[5128_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.8
+[5128_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.8&jobName=macOS
 
-[5127_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.7
-[5127_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.7&jobName=Windows
+[5128_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.12.8
+[5128_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.12.8&jobName=Windows
 
 # Unmaintained Qt build scripts
 
