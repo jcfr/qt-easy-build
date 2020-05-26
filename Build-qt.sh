@@ -283,7 +283,7 @@ then
                 -DCMAKE_OSX_SYSROOT=$osx_sysroot
                 -DCMAKE_OSX_DEPLOYMENT_TARGET=$osx_deployment_target"
   export KERNEL_BITS=64
-  qt_macos_options="-sdk $osx_sysroot -webengine-spellchecker -webengine-native-spellchecker"
+  qt_macos_options="-sdk $osx_sysroot"
 
   sha256_openssl=`shasum -a 256 ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5 ./$qt_archive | awk '{ print $4 }'`
