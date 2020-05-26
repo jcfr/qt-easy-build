@@ -2,13 +2,13 @@ name: qt-easy-build
 trigger:
   branches:
     include:
-    - 5.12.*
+    - 5.15.*
 jobs:
   - job: Linux
     timeoutInMinutes: 0
     cancelTimeoutInMinutes: 300
     pool:
-      vmImage: 'Ubuntu-16.04'
+      vmImage: 'ubuntu-18.04'
     steps:
       - checkout: self
         clean: true
@@ -17,13 +17,13 @@ jobs:
           sudo apt-get install libclang-dev -y
         displayName: 'Install QDoc Requirements'
       - script: |
-          # https://doc-snapshots.qt.io/qt5-5.12/linux.html
+          # https://doc-snapshots.qt.io/qt5-5.15/linux.html
           sudo apt-get install build-essential libgl1-mesa-dev -y
         displayName: 'Install Qt Requirements for Development'
       - script: |
-          # https://doc.qt.io/qt-5.12/qtwebengine-platform-notes.html#all-platforms
+          # https://doc.qt.io/qt-5.15/qtwebengine-platform-notes.html#all-platforms
           sudo apt-get install bison flex gperf -y
-          # https://doc.qt.io/qt-5.12/qtwebengine-platform-notes.html#linux
+          # https://doc.qt.io/qt-5.15/qtwebengine-platform-notes.html#linux
           sudo apt-get install libdbus-1-dev libnss3-dev libfontconfig1-dev -y
           # Qt WebEngine for xcb
           sudo apt-get install libdrm-dev libxcomposite-dev libxcursor-dev libxi-dev libxrandr-dev libxss-dev libxtst-dev -y
@@ -52,7 +52,7 @@ jobs:
             exit 1;
           }
 
-          expected_qt_version="5.12.8"
+          expected_qt_version="5.15.0"
 
           ./qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
@@ -64,18 +64,18 @@ jobs:
     strategy:
         maxParallel: 4
         matrix:
+          # https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/macos/macos-10.15-Readme.md
           # https://github.com/microsoft/azure-pipelines-image-generation/blob/master/images/macos/macos-10.14-Readme.md
-          # https://github.com/Microsoft/azure-pipelines-image-generation/blob/master/images/macos/macos-10.13-Readme.md
+          XCode_11:
+            imageName: 'macos-10.15'
+            xcodeVersion: 11.5
+            sdk: 'macosx10.15'
+            deploymentTarget: '10.15'
           XCode_10:
             imageName: 'macos-10.14'
             xcodeVersion: 10.3
             sdk: 'macosx10.14'
             deploymentTarget: '10.14'
-          XCode_9_4:
-            imageName: 'macos-10.14'
-            xcodeVersion: 9.4.1
-            sdk: 'macosx10.13'
-            deploymentTarget: '10.13'
     pool:
       vmImage: $(imageName)
     steps:
@@ -117,7 +117,7 @@ jobs:
             exit 1;
           }
 
-          expected_qt_version="5.12.8"
+          expected_qt_version="5.15.0"
 
           ./qt-everywhere-build-$expected_qt_version/bin/qmake --version | grep "Using Qt version $expected_qt_version" || die "Could not run Qt $expected_qt_version"
 
