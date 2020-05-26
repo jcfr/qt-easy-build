@@ -7,14 +7,14 @@ set -o pipefail
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.12.8
+QT_VERSION=5.15.0
 
 # OpenSSL version
 OPENSSL_VERSION=1.1.1d
 
 # Checksums
 OPENSSL_SHA256="1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
-QT_MD5="8ec2a0458f3b8e9c995b03df05e006e4"
+QT_MD5="610a228dba6ef469d14d145b71ab3b88"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -180,11 +180,11 @@ then
   # MacOS
   if [[ -z $osx_deployment_target ]]
   then
-    osx_deployment_target=10.12
+    osx_deployment_target=10.13
   fi
   if [[ -z $osx_sysroot ]]
   then
-    osx_sysroot=macosx10.13
+    osx_sysroot=macosx10.15
   fi
   if [[ -z $osx_architecture ]]
   then
