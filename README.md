@@ -7,30 +7,32 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 
 Scripts available for these Qt versions:
 
-* [5.15.1][5151]
+* [5.15.2][5152]
 * [4.8.7][487]
 
-[5151]: https://github.com/jcfr/qt-easy-build/tree/5.15.1#readme
+[5152]: https://github.com/jcfr/qt-easy-build/tree/5.15.2#readme
 [487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
 | Qt Version   | Linux                                                   | macOS                                                   | Windows CI |
 |--------------|---------------------------------------------------------|---------------------------------------------------------|------------|
-| 5.15.1       | [![Build Status][5151_linux_i_azure]][5151_linux_azure] | [![Build Status][5151_macos_i_azure]][5151_macos_azure] | [![Build Status][5151_windows_i_azure]][5151_windows_azure]         |
+| 5.15.2       | [![Build Status][5152_linux_i_azure]][5152_linux_azure] | [![Build Status][5152_macos_i_azure]][5152_macos_azure] | [![Build Status][5152_windows_i_azure]][5152_windows_azure]         |
 | 4.8.7        | NA                                                      | NA                                                      | NA         |
 
-[5151_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.1
-[5151_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.1&jobName=Linux
+[5152_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
+[5152_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=Linux
 
-[5151_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.1
-[5151_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.1&jobName=macOS
+[5152_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
+[5152_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=macOS
 
-[5151_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.1
-[5151_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.1&jobName=Windows
+[5152_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
+[5152_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=Windows
 
 # Unmaintained Qt build scripts
 
 Scripts available for these Qt versions:
 
+* [5.15.2][5152]
+* [5.15.1][5151]
 * [5.15.0][5150]
 * [5.12.8][5128]
 * [5.11.2][5112]
@@ -40,6 +42,8 @@ Scripts available for these Qt versions:
 * [4.8.6][486]
 * [4.8.5][485]
 
+[5152]: https://github.com/jcfr/qt-easy-build/tree/5.15.2#readme
+[5151]: https://github.com/jcfr/qt-easy-build/tree/5.15.1#readme
 [5150]: https://github.com/jcfr/qt-easy-build/tree/5.15.0#readme
 [5128]: https://github.com/jcfr/qt-easy-build/tree/5.12.8#readme
 [5112]: https://github.com/jcfr/qt-easy-build/tree/5.11.2#readme
