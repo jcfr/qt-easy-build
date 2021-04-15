@@ -291,7 +291,6 @@ else
   # Linux
   sha256_openssl=`sha256sum ./$openssl_archive | awk '{ print $1 }'`
   md5_qt=`md5sum ./$qt_archive | awk '{ print $1 }'`
-  qt_linux_options="-no-xinerama"
 fi
 if [ "$sha256_openssl" != "$OPENSSL_SHA256" ]
 then
@@ -377,7 +376,6 @@ qt_build_mode="-verbose"
   -silent \
   -openssl -I $deps_dir/openssl-$OPENSSL_VERSION/include           \
   ${qt_macos_options}                                         \
-  ${qt_linux_options}                                         \
   -L $deps_dir/openssl-$OPENSSL_VERSION
 
 if [[ -z $qt_targets ]]
