@@ -310,7 +310,7 @@ mkdir -p zlib-install
 mkdir -p zlib-build
 if [[ ! -d zlib ]]
 then
-  git clone git://github.com/commontk/zlib.git
+  git clone https://github.com/commontk/zlib.git
 fi
 cd zlib-build
 $cmake -DCMAKE_BUILD_TYPE:STRING=Release             \

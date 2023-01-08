@@ -13,7 +13,7 @@ cwd=$(pwd)
 rm -rf zlib* && \
 mkdir zlib-install  && \
 mkdir zlib-build  && \
-git clone git://github.com/commontk/zlib.git  && \
+git clone https://github.com/commontk/zlib.git  && \
 cd zlib-build  && \
 "$cmake" -DCMAKE_BUILD_TYPE:STRING=Release \
        -DZLIB_MANGLE_PREFIX:STRING=slicer_zlib_ \
@@ -87,7 +87,7 @@ cwd=$(pwd)
 rm -rf zlib* && \
 mkdir zlib-install  && \
 mkdir zlib-build  && \
-git clone git://github.com/commontk/zlib.git  && \
+git clone https://github.com/commontk/zlib.git  && \
 cd zlib-build  && \
 "$cmake" -DCMAKE_BUILD_TYPE:STRING=Release \
        -DZLIB_MANGLE_PREFIX:STRING=slicer_zlib_ \
