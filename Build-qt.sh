@@ -2,6 +2,9 @@
 set -ex
 set -o pipefail
 
+script_dir=$(cd $(dirname $0) || exit 1; pwd)
+
+
 #
 # Configuration
 #
@@ -358,6 +361,12 @@ qt_install_dir_options="-prefix $install_dir"
 if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
+
+  # Apply patches
+  pushd $src_dir
+  git apply --ignore-whitespace $script_dir/patches/*.patch
+  popd
+
 fi
 cd $src_dir
 
