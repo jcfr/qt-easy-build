@@ -65,17 +65,11 @@ jobs:
         maxParallel: 4
         matrix:
           # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md
-          # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.14-Readme.md
           XCode_11:
             imageName: 'macos-10.15'
             xcodeVersion: 11.5
             sdk: 'macosx10.15'
             deploymentTarget: '10.15'
-          XCode_10:
-            imageName: 'macos-10.14'
-            xcodeVersion: 10.3
-            sdk: 'macosx10.14'
-            deploymentTarget: '10.14'
     pool:
       vmImage: $(imageName)
     steps:
@@ -94,11 +88,6 @@ jobs:
           xcode-select -p
           c++ --version
           cmake --version
-
-          if [[ $(imageName) == 'macos-10.14' ]] && [[ $(xcodeVersion) == 9.4.1 ]]
-          then
-            sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-          fi
 
           script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
