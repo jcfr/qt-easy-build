@@ -8,4 +8,4 @@ Before being applied, patches are sorted alphabetically. This ensures that patch
 
 ## Patches
 
-* NA
+* [0001-8467beddb-add-missing-macos-header-file-that-was-indirectly-included.patch][0001-8467beddb-add-missing-macos-header-file-that-was-indirectly-included.patch] adapted from [qt/qtbase@8467beddb](https://github.com/qt/qtbase/commit/8467beddb7239cc213ae13900fa30e3d26df5e78). The `qtbase/` sub-directory has been added to the patch.
