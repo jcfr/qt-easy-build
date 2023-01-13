@@ -370,10 +370,6 @@ then
 fi
 cd $src_dir
 
-# Options used to mimic the homebrew packaging of Qt5
-#qt_homebrew_package_options="-system-zlib -qt-libpng -qt-libjpeg -qt-freetype -qt-pcre -dbus-runtime -proprietary-codecs"
-qt_build_mode="-silent"
-qt_build_mode="-verbose"
 
 # NOTE:  C++14 is needed to support QtWebEngine from chromium
 ./configure $qt_install_dir_options                           \
