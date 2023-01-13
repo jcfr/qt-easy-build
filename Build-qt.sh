@@ -10,14 +10,14 @@ script_dir=$(cd $(dirname $0) || exit 1; pwd)
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.15.2
+QT_VERSION=5.15.8
 
 # OpenSSL version
 OPENSSL_VERSION=1.1.1d
 
 # Checksums
 OPENSSL_SHA256="1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
-QT_MD5="e1447db4f06c841d8947f0a6ce83a7b5"
+QT_MD5="86b7b496735df3973a390b0d515c1a0f"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -141,8 +141,11 @@ command_not_found_install_hint="\n=> Consider installing the program using a pac
 openssl_archive=openssl-$OPENSSL_VERSION.tar.gz
 openssl_download_url=https://www.openssl.org/source/old/1.1.1/$openssl_archive
 
-qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
-qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
+#qt_archive=qt-everywhere-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+qt_archive=qt-everywhere-opensource-src-$QT_VERSION.${QT_SRC_ARCHIVE_EXT}
+#qt_download_url=https://download.qt.io/official_releases/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
+qt_download_url=https://download.qt.io/archive/qt/$QT_MAJOR_MINOR_VERSION/$QT_VERSION/single/$qt_archive
+echo "qt_download_url [$qt_download_url]"
 
 cwd=$(pwd)
 
@@ -386,7 +389,12 @@ then
 
   # Apply patches
   pushd $src_dir
-  git apply --ignore-whitespace $script_dir/patches/*.patch
+  patch_count=`ls -1 $script_dir/patches/*.patch 2>/dev/null | wc -l`
+  if [ $patch_count != 0 ]
+  then
+    echo "Found $patch_count patches"
+    git apply --ignore-whitespace $script_dir/patches/*.patch
+  fi
   popd
 
 fi
