@@ -348,6 +348,28 @@ then
 fi
 cd ..
 
+# Build Python 2.7: required to build QtWebEngine and QtPdf in Qt 5.15.x
+echo "Build Python 2.7"
+
+cwd=$(pwd)
+
+mkdir -p python-cmake-buildsystem-build
+if [[ ! -d python-cmake-buildsystem ]]
+then
+  git clone https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
+fi
+cd python-cmake-buildsystem-build
+$cmake \
+  -DCMAKE_BUILD_TYPE:STRING=Release \
+  -DCMAKE_INSTALL_PREFIX:PATH=$cwd/python-cmake-buildsystem-install \
+  -DPYTHON_VERSION:STRING=2.7.15 \
+  -DBUILD_LIBPYTHON_SHARED:BOOL=ON \
+  -DENABLE_SSL:BOOL=OFF \
+  ../python-cmake-buildsystem
+
+$cmake --build $cwd/python-cmake-buildsystem-build --config Release --target install -- -j$nbthreads
+cd ..
+
 popd
 
 # Build Qt
@@ -370,6 +392,7 @@ then
 fi
 cd $src_dir
 
+export PATH=$deps_dir/python-cmake-buildsystem-install/bin:$PATH
 
 # NOTE:  C++14 is needed to support QtWebEngine from chromium
 ./configure $qt_install_dir_options                           \
