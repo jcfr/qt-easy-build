@@ -8,15 +8,12 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 Scripts available for these Qt versions:
 
 * [5.15.2][5152]
-* [4.8.7][487]
 
 [5152]: https://github.com/jcfr/qt-easy-build/tree/5.15.2#readme
-[487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
 | Qt Version   | Linux                                                   | macOS                                                   | Windows CI |
 |--------------|---------------------------------------------------------|---------------------------------------------------------|------------|
 | 5.15.2       | [![Build Status][5152_linux_i_azure]][5152_linux_azure] | [![Build Status][5152_macos_i_azure]][5152_macos_azure] | [![Build Status][5152_windows_i_azure]][5152_windows_azure]         |
-| 4.8.7        | NA                                                      | NA                                                      | NA         |
 
 [5152_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
 [5152_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=Linux
@@ -50,6 +47,7 @@ Scripts available for these Qt versions:
 [5100]: https://github.com/jcfr/qt-easy-build/tree/5.10.0#readme
 [591]: https://github.com/jcfr/qt-easy-build/tree/5.9.1#readme
 [571]: https://github.com/jcfr/qt-easy-build/tree/5.7.1#readme
+[487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 [486]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 [485]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
 
