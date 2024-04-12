@@ -22,6 +22,9 @@ To display script options:
 Windows
 -------
 
+> [!IMPORTANT]
+> Building Qt 5.15 on Windows using this project is not yet supported. See https://github.com/jcfr/qt-easy-build/issues/71
+
 1. Open 64 bit Visual Studio Command Prompt
 2. Paste the corresponding text from the box below and press enter.
 
