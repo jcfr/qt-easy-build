@@ -1,3 +1,5 @@
+trap { Write-Error $_; Exit 1 }
+
 # Sanity checks
 if(!$destDir){
   throw "'destDir' variable not set."
@@ -67,6 +69,17 @@ Download-File $jomArchiveUrl $jomArchiveFile
 $jomArchiveUrl = 'https://master.qt.io/official_releases/jom/' + $jomArchiveName
 Download-File $jomArchiveUrl $jomArchiveFile
 
+# verify checksum
+$fileName = $jomArchiveName
+$expectedFileHash = "4cd0e6fb721e063b24232bc9ecb6d130"
+$fileHash = Get-FileHash $jomArchiveFile -Algorithm MD5
+Write-Host "Verifying $fileName..."
+if (!$expectedFileHash -eq $fileHash) {
+  throw "Failed to download $fileName
+  Expected checksum $expectedFileHash
+   Current checksum $fileHash"
+}
+
 # extract jom package
 if (![System.IO.Directory]::Exists($jomInstallDir)) {
   Write-Host "Extracting $jomArchiveFile to $jomInstallDir..."
@@ -82,6 +95,17 @@ $cmakeInstallDir = Join-Path $destDir $cmakeBaseName
 $cmakeArchiveUrl = 'https://www.cmake.org/files/v3.22/' + $cmakeArchiveName
 $cmakeArchiveFile = Join-Path $destDir $cmakeArchiveName
 Download-File $cmakeArchiveUrl $cmakeArchiveFile
+
+# verify checksum
+$fileName = $cmakeArchiveName
+$expectedFileHash = "48bcc3e71e918b72e2682f9ca9d44dd6c416379071c1ecb530d0633374f91f15"
+$fileHash = Get-FileHash $cmakeArchiveFile -Algorithm SHA256
+Write-Host "Verifying $fileName..."
+if (!$expectedFileHash -eq $fileHash) {
+  throw "Failed to download $fileName
+  Expected checksum $expectedFileHash
+   Current checksum $fileHash"
+}
 
 # extract CMake package
 if (![System.IO.Directory]::Exists($cmakeInstallDir)) {
