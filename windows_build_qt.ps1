@@ -54,11 +54,6 @@ param (
   }
 }
 
-# download 7zip
-Write-Host "Download 7Zip commandline tool"
-$7zaExe = Join-Path $destDir '7za.exe'
-Download-File 'https://github.com/chocolatey/chocolatey/blob/master/src/tools/7za.exe?raw=true' "$7zaExe"
-
 # download jom
 Write-Host "Download jom commandline tool"
 $jomBaseName = 'jom_1_1_0'
@@ -75,7 +70,7 @@ Download-File $jomArchiveUrl $jomArchiveFile
 # extract jom package
 if (![System.IO.Directory]::Exists($jomInstallDir)) {
   Write-Host "Extracting $jomArchiveFile to $jomInstallDir..."
-  Start-Process "$7zaExe" -ArgumentList "x -o`"$jomInstallDir`" -y `"$jomArchiveFile`"" -Wait
+  Expand-Archive -LiteralPath $jomArchiveFile -DestinationPath $jomInstallDir
 }
 $jom = Join-Path $jomInstallDir 'jom.exe'
 
@@ -91,7 +86,7 @@ Download-File $cmakeArchiveUrl $cmakeArchiveFile
 # extract CMake package
 if (![System.IO.Directory]::Exists($cmakeInstallDir)) {
   Write-Host "Extracting $cmakeArchiveFile to $destDir..."
-  Start-Process "$7zaExe" -ArgumentList "x -o`"$destDir`" -y `"$cmakeArchiveFile`"" -Wait
+  Expand-Archive -LiteralPath $cmakeArchiveFile -DestinationPath $destDir
 }
 $cmake = Join-Path $cmakeInstallDir 'bin\cmake.exe'
 
