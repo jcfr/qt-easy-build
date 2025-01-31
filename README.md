@@ -7,22 +7,11 @@ You will find here scripts allowing to very easily build Qt with OpenSSL support
 
 Scripts available for these Qt versions:
 
-* [5.15.2][5152]
+* [5.15.16][51516]
+* [5.15.8][5158]
 
-[5152]: https://github.com/jcfr/qt-easy-build/tree/5.15.2#readme
-
-| Qt Version   | Linux                                                   | macOS                                                   | Windows CI |
-|--------------|---------------------------------------------------------|---------------------------------------------------------|------------|
-| 5.15.2       | [![Build Status][5152_linux_i_azure]][5152_linux_azure] | [![Build Status][5152_macos_i_azure]][5152_macos_azure] | [![Build Status][5152_windows_i_azure]][5152_windows_azure]         |
-
-[5152_linux_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
-[5152_linux_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=Linux
-
-[5152_macos_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
-[5152_macos_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=macOS
-
-[5152_windows_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_build/latest?definitionId=1&branchName=5.15.2
-[5152_windows_i_azure]: https://dev.azure.com/jamesobutler/qt-easy-build/_apis/build/status/jamesobutler.qt-easy-build?branchName=5.15.2&jobName=Windows
+[51516]: https://github.com/jcfr/qt-easy-build/tree/5.15.16#readme
+[5158]: https://github.com/jcfr/qt-easy-build/tree/5.15.8#readme
 
 # Unmaintained Qt build scripts
 
