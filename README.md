@@ -14,14 +14,39 @@ curl -s https://raw.githubusercontent.com/jcfr/qt-easy-build/5.15.16/Build-qt.sh
 > [!IMPORTANT]
 > [git](https://git-scm.com/) is required to apply patches for 5.15.16. Download the [patches directory](https://github.com/jcfr/qt-easy-build/tree/5.15.16/patches) and place the directory next to the downloaded Build-qt.sh script.
 
+Build for x86_64 on x86_64
+---------------
 ```
 ./Build-qt.sh -j 4
 ```
+Build for x86_64 on Apple Silicon (arm64):
+---------------
 
-To display script options:
+Install x86_64 build dependencies using x86_64 Homebrew:
+```
+arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install node
+brew install ninja
+```
+Remain in x86_x64 /bin/bash. Example usage building Qt for x86_64 on Apple Silicon running macOS 15 with macOS 15.2 SDK and setting deployment target to macOS 13:
+```
+./Build-qt.sh -a x86_64 -s macosx15.2 -d 13 -j 4
+```
 
+Script Options
+---------------
 ```
 ./Build-qt.sh --help
+```
+
+Troubleshooting
+---------------
+To avoid running into the error of "Too many open files", increase the value of `ulimit -n`. For example, this may include changing the value from 256 to 4096 by way of `ulimit -n 4096`.
+```
+global/qlogging.cpp:121:65: fatal error: cannot open file '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk/usr/include/sys/syscall.h': Too many open files
+  121 | #if defined(Q_OS_LINUX) && (defined(__GLIBC__) || __has_include(<sys/syscall.h>))
+      |                                                                 ^
+1 error generated.
 ```
 
 Windows
