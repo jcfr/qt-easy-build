@@ -10,14 +10,14 @@ script_dir=$(cd $(dirname $0) || exit 1; pwd)
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.15.8
+QT_VERSION=5.15.16
 
 # OpenSSL version
 OPENSSL_VERSION=1.1.1w
 
 # Checksums
 OPENSSL_SHA256="cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8"
-QT_MD5="86b7b496735df3973a390b0d515c1a0f"
+QT_MD5="2a25d4e90abd05284bf5bb01365c9b44"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
