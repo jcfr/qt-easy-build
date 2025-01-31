@@ -395,6 +395,9 @@ then
     echo "Cloning qtlocation so that patches can be applied with git"
     rm -r qtlocation
     git clone --recurse-submodules https://github.com/qt/qtlocation.git -b v5.15.16-lts-lgpl qtlocation
+    echo "Cloning qtwebengine so that patches can be applied with git"
+    rm -r qtwebengine
+    git clone --recurse-submodules https://github.com/qt/qtwebengine.git -b v5.15.16-lts-lgpl qtwebengine
     echo "Found $patch_count patches"
     git apply --ignore-whitespace $script_dir/patches/*.patch
   fi
