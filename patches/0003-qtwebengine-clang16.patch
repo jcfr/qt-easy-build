@@ -1,0 +1,278 @@
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h b/qtwebengine/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
+index 3abf0ba03b0..d88a82a2eec 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
++++ b/qtwebengine/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
+@@ -215,7 +215,7 @@
+ #   define FAR
+ #endif
+ 
+-#if !defined(MACOS) && !defined(TARGET_OS_MAC)
++#if !defined(__MACTYPES__)
+ typedef unsigned char  Byte;  /* 8 bits */
+ #endif
+ typedef unsigned int   uInt;  /* 16 bits or more */
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc b/qtwebengine/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
+index 2680873c279..21cbe73f52d 100644
+--- a/qtwebengine/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
++++ b/qtwebengine/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
+@@ -729,8 +729,9 @@ hb_ft_face_create_referenced (FT_Face ft_face)
+ }
+ 
+ static void
+-hb_ft_face_finalize (FT_Face ft_face)
++hb_ft_face_finalize (void *arg)
+ {
++  FT_Face ft_face = (FT_Face) arg;
+   hb_face_destroy ((hb_face_t *) ft_face->generic.data);
+ }
+ 
+@@ -762,7 +763,7 @@ hb_ft_face_create_cached (FT_Face ft_face)
+       ft_face->generic.finalizer (ft_face);
+ 
+     ft_face->generic.data = hb_ft_face_create (ft_face, nullptr);
+-    ft_face->generic.finalizer = (FT_Generic_Finalizer) hb_ft_face_finalize;
++    ft_face->generic.finalizer = hb_ft_face_finalize;
+   }
+ 
+   return hb_face_reference ((hb_face_t *) ft_face->generic.data);
+@@ -949,8 +950,9 @@ get_ft_library ()
+ }
+ 
+ static void
+-_release_blob (FT_Face ft_face)
++_release_blob (void *arg)
+ {
++  FT_Face ft_face = (FT_Face) arg;
+   hb_blob_destroy ((hb_blob_t *) ft_face->generic.data);
+ }
+ 
+@@ -1032,7 +1034,7 @@ hb_ft_font_set_funcs (hb_font_t *font)
+ #endif
+ 
+   ft_face->generic.data = blob;
+-  ft_face->generic.finalizer = (FT_Generic_Finalizer) _release_blob;
++  ft_face->generic.finalizer = _release_blob;
+ 
+   _hb_ft_font_set_funcs (font, ft_face, true);
+   hb_ft_font_set_load_flags (font, FT_LOAD_DEFAULT | FT_LOAD_NO_HINTING);
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/base/bit-field.h b/qtwebengine/src/3rdparty/chromium/v8/src/base/bit-field.h
+index ca5fb459210..50f16262e66 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/base/bit-field.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/base/bit-field.h
+@@ -38,16 +38,14 @@ class BitField final {
+   static constexpr U kMask = ((U{1} << kShift) << kSize) - (U{1} << kShift);
+   static constexpr int kLastUsedBit = kShift + kSize - 1;
+   static constexpr U kNumValues = U{1} << kSize;
+-
+-  // Value for the field with all bits set.
+-  static constexpr T kMax = static_cast<T>(kNumValues - 1);
++  static constexpr U kMax = kNumValues - 1;
+ 
+   template <class T2, int size2>
+   using Next = BitField<T2, kShift + kSize, size2, U>;
+ 
+   // Tells whether the provided value fits into the bit field.
+   static constexpr bool is_valid(T value) {
+-    return (static_cast<U>(value) & ~static_cast<U>(kMax)) == 0;
++    return (static_cast<U>(value) & ~kMax) == 0;
+   }
+ 
+   // Returns a type U with the bit field value encoded.
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
+index 64c89eeaeb6..25edffb567d 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
+@@ -104,23 +104,21 @@ class JSDateTimeFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_DATE_TIME_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(HourCycle::kUndefined <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH11 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH12 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH23 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH24 <= HourCycleBits::kMax);
+-
+-  STATIC_ASSERT(DateTimeStyle::kUndefined <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kFull <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kLong <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kMedium <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kShort <= DateStyleBits::kMax);
+-
+-  STATIC_ASSERT(DateTimeStyle::kUndefined <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kFull <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kLong <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kMedium <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kShort <= TimeStyleBits::kMax);
++  STATIC_ASSERT(HourCycleBits::is_valid(HourCycle::kUndefined));
++  STATIC_ASSERT(HourCycleBits::is_valid(HourCycle::kH11));
++  STATIC_ASSERT(HourCycleBits::is_valid(HourCycle::kH12));
++  STATIC_ASSERT(HourCycleBits::is_valid(HourCycle::kH23));
++  STATIC_ASSERT(HourCycleBits::is_valid(HourCycle::kH24));
++  STATIC_ASSERT(DateStyleBits::is_valid(DateTimeStyle::kUndefined));
++  STATIC_ASSERT(DateStyleBits::is_valid(DateTimeStyle::kFull));
++  STATIC_ASSERT(DateStyleBits::is_valid(DateTimeStyle::kLong));
++  STATIC_ASSERT(DateStyleBits::is_valid(DateTimeStyle::kMedium));
++  STATIC_ASSERT(DateStyleBits::is_valid(DateTimeStyle::kShort));
++  STATIC_ASSERT(TimeStyleBits::is_valid(DateTimeStyle::kUndefined));
++  STATIC_ASSERT(TimeStyleBits::is_valid(DateTimeStyle::kFull));
++  STATIC_ASSERT(TimeStyleBits::is_valid(DateTimeStyle::kLong));
++  STATIC_ASSERT(TimeStyleBits::is_valid(DateTimeStyle::kMedium));
++  STATIC_ASSERT(TimeStyleBits::is_valid(DateTimeStyle::kShort));
+ 
+   DECL_ACCESSORS(icu_locale, Managed<icu::Locale>)
+   DECL_ACCESSORS(icu_simple_date_format, Managed<icu::SimpleDateFormat>)
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-display-names.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-display-names.h
+index cd3ca1ea475..30126040a9c 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-display-names.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-display-names.h
+@@ -69,11 +69,11 @@ class JSDisplayNames
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_DISPLAY_NAMES_FLAGS()
+ 
+-  STATIC_ASSERT(Style::kLong <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::kShort <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::kNarrow <= StyleBits::kMax);
+-  STATIC_ASSERT(Fallback::kCode <= FallbackBit::kMax);
+-  STATIC_ASSERT(Fallback::kNone <= FallbackBit::kMax);
++  STATIC_ASSERT(StyleBits::is_valid(Style::kLong));
++  STATIC_ASSERT(StyleBits::is_valid(Style::kShort));
++  STATIC_ASSERT(StyleBits::is_valid(Style::kNarrow));
++  STATIC_ASSERT(FallbackBit::is_valid(Fallback::kCode));
++  STATIC_ASSERT(FallbackBit::is_valid(Fallback::kNone));
+ 
+   DECL_ACCESSORS(internal, Managed<DisplayNamesInternal>)
+ 
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-list-format.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-list-format.h
+index 34878b56616..b69ec1fc188 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-list-format.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-list-format.h
+@@ -84,12 +84,12 @@ class JSListFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_LIST_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(Style::LONG <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::SHORT <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::NARROW <= StyleBits::kMax);
+-  STATIC_ASSERT(Type::CONJUNCTION <= TypeBits::kMax);
+-  STATIC_ASSERT(Type::DISJUNCTION <= TypeBits::kMax);
+-  STATIC_ASSERT(Type::UNIT <= TypeBits::kMax);
++  STATIC_ASSERT(StyleBits::is_valid(Style::LONG));
++  STATIC_ASSERT(StyleBits::is_valid(Style::SHORT));
++  STATIC_ASSERT(StyleBits::is_valid(Style::NARROW));
++  STATIC_ASSERT(TypeBits::is_valid(Type::CONJUNCTION));
++  STATIC_ASSERT(TypeBits::is_valid(Type::DISJUNCTION));
++  STATIC_ASSERT(TypeBits::is_valid(Type::UNIT));
+ 
+   DECL_PRINTER(JSListFormat)
+ 
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
+index eac9d5e92a4..2a0525b1606 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
+@@ -60,8 +60,8 @@ class JSPluralRules
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_PLURAL_RULES_FLAGS()
+ 
+-  STATIC_ASSERT(Type::CARDINAL <= TypeBit::kMax);
+-  STATIC_ASSERT(Type::ORDINAL <= TypeBit::kMax);
++  STATIC_ASSERT(TypeBit::is_valid(Type::CARDINAL));
++  STATIC_ASSERT(TypeBit::is_valid(Type::ORDINAL));
+ 
+   DECL_ACCESSORS(icu_plural_rules, Managed<icu::PluralRules>)
+   DECL_ACCESSORS(icu_number_formatter,
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
+index 79e079b05be..2428de7493f 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
+@@ -2,6 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include "src/common/globals.h"
+ #ifndef V8_INTL_SUPPORT
+ #error Internationalization is expected to be enabled.
+ #endif  // V8_INTL_SUPPORT
+@@ -75,8 +76,8 @@ class JSRelativeTimeFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_RELATIVE_TIME_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(Numeric::AUTO <= NumericBit::kMax);
+-  STATIC_ASSERT(Numeric::ALWAYS <= NumericBit::kMax);
++  STATIC_ASSERT(NumericBit::is_valid(Numeric::AUTO));
++  STATIC_ASSERT(NumericBit::is_valid(Numeric::ALWAYS));
+ 
+   DECL_PRINTER(JSRelativeTimeFormat)
+ 
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
+index 45e03c06fab..b3cd1dfa824 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
+@@ -53,9 +53,9 @@ class JSSegmentIterator
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENT_ITERATOR_FLAGS()
+ 
+-  STATIC_ASSERT(JSSegmenter::Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::SENTENCE <= GranularityBits::kMax);
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::GRAPHEME));
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::WORD));
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::SENTENCE));
+ 
+   TQ_OBJECT_CONSTRUCTORS(JSSegmentIterator)
+ };
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segmenter.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
+index e4620427113..45ff8e42bbe 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
+@@ -63,9 +63,9 @@ class JSSegmenter : public TorqueGeneratedJSSegmenter<JSSegmenter, JSObject> {
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENTER_FLAGS()
+ 
+-  STATIC_ASSERT(Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(Granularity::SENTENCE <= GranularityBits::kMax);
++  STATIC_ASSERT(GranularityBits::is_valid(Granularity::GRAPHEME));
++  STATIC_ASSERT(GranularityBits::is_valid(Granularity::WORD));
++  STATIC_ASSERT(GranularityBits::is_valid(Granularity::SENTENCE));
+ 
+   DECL_PRINTER(JSSegmenter)
+ 
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segments.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segments.h
+index b33323d6f9d..a90e0da8685 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segments.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/js-segments.h
+@@ -57,9 +57,9 @@ class JSSegments : public TorqueGeneratedJSSegments<JSSegments, JSObject> {
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENT_ITERATOR_FLAGS()
+ 
+-  STATIC_ASSERT(JSSegmenter::Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::SENTENCE <= GranularityBits::kMax);
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::GRAPHEME));
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::WORD));
++  STATIC_ASSERT(GranularityBits::is_valid(JSSegmenter::Granularity::SENTENCE));
+ 
+   TQ_OBJECT_CONSTRUCTORS(JSSegments)
+ };
+diff --git a/qtwebengine/src/3rdparty/chromium/v8/src/objects/shared-function-info.h b/qtwebengine/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
+index def04f05b67..b3177da4bcc 100644
+--- a/qtwebengine/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
++++ b/qtwebengine/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
+@@ -655,12 +655,12 @@ class SharedFunctionInfo : public HeapObject {
+   class BodyDescriptor;
+ 
+   // Bailout reasons must fit in the DisabledOptimizationReason bitfield.
+-  STATIC_ASSERT(BailoutReason::kLastErrorMessage <=
+-                DisabledOptimizationReasonBits::kMax);
++  STATIC_ASSERT(DisabledOptimizationReasonBits::is_valid(
++      BailoutReason::kLastErrorMessage));
+ 
+-  STATIC_ASSERT(kLastFunctionKind <= FunctionKindBits::kMax);
+-  STATIC_ASSERT(FunctionSyntaxKind::kLastFunctionSyntaxKind <=
+-                FunctionSyntaxKindBits::kMax);
++  STATIC_ASSERT(FunctionKindBits::is_valid(FunctionKind::kLastFunctionKind));
++  STATIC_ASSERT(FunctionSyntaxKindBits::is_valid(
++      FunctionSyntaxKind::kLastFunctionSyntaxKind));
+ 
+   // Indicates that this function uses a super property (or an eval that may
+   // use a super property).
