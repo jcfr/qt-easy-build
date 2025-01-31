@@ -392,6 +392,9 @@ then
   patch_count=`ls -1 $script_dir/patches/*.patch 2>/dev/null | wc -l`
   if [ $patch_count != 0 ]
   then
+    echo "Cloning qtlocation so that patches can be applied with git"
+    rm -r qtlocation
+    git clone --recurse-submodules https://github.com/qt/qtlocation.git -b v5.15.16-lts-lgpl qtlocation
     echo "Found $patch_count patches"
     git apply --ignore-whitespace $script_dir/patches/*.patch
   fi
