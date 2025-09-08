@@ -10,8 +10,8 @@ Scripts available for these Qt versions:
 * [5.15.16][51516]
 * [5.15.8][5158]
 
-[51516]: https://github.com/jcfr/qt-easy-build/tree/5.15.16#readme
-[5158]: https://github.com/jcfr/qt-easy-build/tree/5.15.8#readme
+[51516]: https://github.com/commontk/qt-easy-build/tree/5.15.16#readme
+[5158]: https://github.com/commontk/qt-easy-build/tree/5.15.8#readme
 
 # Unmaintained Qt build scripts
 
@@ -29,17 +29,17 @@ Scripts available for these Qt versions:
 * [4.8.6][486]
 * [4.8.5][485]
 
-[5152]: https://github.com/jcfr/qt-easy-build/tree/5.15.2#readme
-[5151]: https://github.com/jcfr/qt-easy-build/tree/5.15.1#readme
-[5150]: https://github.com/jcfr/qt-easy-build/tree/5.15.0#readme
-[5128]: https://github.com/jcfr/qt-easy-build/tree/5.12.8#readme
-[5112]: https://github.com/jcfr/qt-easy-build/tree/5.11.2#readme
-[5100]: https://github.com/jcfr/qt-easy-build/tree/5.10.0#readme
-[591]: https://github.com/jcfr/qt-easy-build/tree/5.9.1#readme
-[571]: https://github.com/jcfr/qt-easy-build/tree/5.7.1#readme
-[487]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
-[486]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
-[485]: https://github.com/jcfr/qt-easy-build/tree/4.8.7#readme
+[5152]: https://github.com/commontk/qt-easy-build/tree/5.15.2#readme
+[5151]: https://github.com/commontk/qt-easy-build/tree/5.15.1#readme
+[5150]: https://github.com/commontk/qt-easy-build/tree/5.15.0#readme
+[5128]: https://github.com/commontk/qt-easy-build/tree/5.12.8#readme
+[5112]: https://github.com/commontk/qt-easy-build/tree/5.11.2#readme
+[5100]: https://github.com/commontk/qt-easy-build/tree/5.10.0#readme
+[591]: https://github.com/commontk/qt-easy-build/tree/5.9.1#readme
+[571]: https://github.com/commontk/qt-easy-build/tree/5.7.1#readme
+[487]: https://github.com/commontk/qt-easy-build/tree/4.8.7#readme
+[486]: https://github.com/commontk/qt-easy-build/tree/4.8.7#readme
+[485]: https://github.com/commontk/qt-easy-build/tree/4.8.7#readme
 
 # Frequently Asked Questions
 
