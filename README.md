@@ -3,7 +3,7 @@
 
 You will find here scripts allowing to very easily build Qt with OpenSSL support on Linux, Windows or macOS
 
-# Maintained Qt build scripts
+## Maintained Qt build scripts
 
 Scripts available for these Qt versions:
 
@@ -13,7 +13,7 @@ Scripts available for these Qt versions:
 [51516]: https://github.com/commontk/qt-easy-build/tree/5.15.16#readme
 [5158]: https://github.com/commontk/qt-easy-build/tree/5.15.8#readme
 
-# Unmaintained Qt build scripts
+## Unmaintained Qt build scripts
 
 Scripts available for these Qt versions:
 
@@ -41,7 +41,7 @@ Scripts available for these Qt versions:
 [486]: https://github.com/commontk/qt-easy-build/tree/4.8.7#readme
 [485]: https://github.com/commontk/qt-easy-build/tree/4.8.7#readme
 
-# Frequently Asked Questions
+## Frequently Asked Questions
 
 **Why does the windows build stop with "The underlying connection was closed: An unexpected error occurred on a receive." ?**
 
@@ -55,7 +55,7 @@ To address the problem, you should update the version of `.NET` installed and in
 
 TLS auto-negotation may fail on older Linux versions. Try adding `--tlsv1.2` to the `curl` invocations in `Build-qt.sh`.
 
-# License
+## License
 
 Scripts in this repository are licensed under the Apache 2.0 License. See [LICENSE_Apache_20](LICENSE_Apache_20) file for details.
 
