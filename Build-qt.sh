@@ -361,6 +361,8 @@ if [[ ! -d python-cmake-buildsystem ]]
 then
   git clone https://github.com/python-cmake-buildsystem/python-cmake-buildsystem.git
 fi
+# Checkout an older python-cmake-buildsystem commit that is compatible with Python 2.7
+(cd python-cmake-buildsystem; git checkout 39d95fd6f6bc78f4d7fa4217093281aa736517c9)
 cd python-cmake-buildsystem-build
 $cmake \
   -DCMAKE_BUILD_TYPE:STRING=Release \
