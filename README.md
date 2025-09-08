@@ -55,6 +55,15 @@ To address the problem, you should update the version of `.NET` installed and in
 
 TLS auto-negotation may fail on older Linux versions. Try adding `--tlsv1.2` to the `curl` invocations in `Build-qt.sh`.
 
+## History
+
+* **2017** — Repository created by [Jean-Christophe Fillion-Robin](https://github.com/jcfr) with initial focus on building Qt 4.8.x and 5.9.x, including CI integration and clear separation of maintained vs. unmaintained branches.
+* **2018** — Expanded to support Qt 5.10.0 and beyond. Documentation improvements (FAQs, TLS support, badges) and community contributions (notably from [Isaiah Norton](https://github.com/ihnorton)) helped stabilize the scripts.
+* **2019–2020** — Contributions from [James Butler](https://github.com/jamesobutler) and others updated tested branches for Qt 5.12 and 5.15 series. Repository became a standard tool for reproducible Qt builds in the [3D Slicer](https://www.slicer.org/) ecosystem.
+* **2021** — Default branch updated to Qt 5.15.2, with continued focus on long-term supported versions.
+* **2024** — Qt 4.8.7 scripts marked as unmaintained, signaling end-of-life for legacy Qt 4 builds.
+* **2025** — Repository transferred from `jcfr/qt-easy-build` to the [commontk](https://github.com/commontk) organization (`commontk/qt-easy-build`) to ensure long-term maintenance and broader community stewardship. Work initiated to support Qt 5.15.17 across Linux, macOS, and Windows.
+
 ## License
 
 Scripts in this repository are licensed under the Apache 2.0 License. See [LICENSE_Apache_20](LICENSE_Apache_20) file for details.
