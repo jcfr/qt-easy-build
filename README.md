@@ -9,10 +9,10 @@ Linux and macOS
 1. Open a terminal and copy the text below:
 
 ```
-curl -s https://raw.githubusercontent.com/commontk/qt-easy-build/5.15.16/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
+curl -s https://raw.githubusercontent.com/commontk/qt-easy-build/5.15.17/Build-qt.sh -o Build-qt.sh && chmod u+x Build-qt.sh
 ```
 > [!IMPORTANT]
-> [git](https://git-scm.com/) is required to apply patches for 5.15.16. Download the [patches directory](https://github.com/commontk/qt-easy-build/tree/5.15.16/patches) and place the directory next to the downloaded Build-qt.sh script.
+> [git](https://git-scm.com/) is required to apply patches for 5.15.17. Download the [patches directory](https://github.com/commontk/qt-easy-build/tree/5.15.17/patches) and place the directory next to the downloaded Build-qt.sh script.
 
 Build for x86_64 on x86_64
 ---------------

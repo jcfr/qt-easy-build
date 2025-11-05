@@ -10,14 +10,14 @@ script_dir=$(cd $(dirname $0) || exit 1; pwd)
 #
 
 # Qt version (major.minor.revision)
-QT_VERSION=5.15.16
+QT_VERSION=5.15.17
 
 # OpenSSL version
 OPENSSL_VERSION=1.1.1w
 
 # Checksums
 OPENSSL_SHA256="cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8"
-QT_MD5="2a25d4e90abd05284bf5bb01365c9b44"
+QT_MD5="5f212232bbc41f2eabbdee4fcbc4040e"
 
 QT_SRC_ARCHIVE_EXT="tar.xz"
 
@@ -396,10 +396,10 @@ then
   then
     echo "Cloning qtlocation so that patches can be applied with git"
     rm -r qtlocation
-    git clone --recurse-submodules https://github.com/qt/qtlocation.git -b v5.15.16-lts-lgpl qtlocation
+    git clone --recurse-submodules https://github.com/qt/qtlocation.git -b v5.15.17-lts-lgpl qtlocation
     echo "Cloning qtwebengine so that patches can be applied with git"
     rm -r qtwebengine
-    git clone --recurse-submodules https://github.com/qt/qtwebengine.git -b v5.15.16-lts-lgpl qtwebengine
+    git clone --recurse-submodules https://github.com/qt/qtwebengine.git -b v5.15.17-lts-lgpl qtwebengine
     echo "Found $patch_count patches"
     git apply --ignore-whitespace $script_dir/patches/*.patch
   fi
