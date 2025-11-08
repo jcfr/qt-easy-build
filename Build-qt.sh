@@ -402,14 +402,14 @@ then
     CVE-2025-23050-qtconnectivity-5.15.diff
   )
   qtlocation_patches=(
-    0001-qtlocation-clang16.patch
+    # 0001-qtlocation-clang16.patch
     patch-qtlocation-mbgl-unique_any.hpp.diff
     patch-qtlocation-narrowing-const-reference.diff # https://trac.macports.org/ticket/73016
   )
 
   qtwebengine_patches=(
-    0002-qtwebengine-ninja1.12.patch
-    0003-qtwebengine-clang16.patch
+    # 0002-qtwebengine-ninja1.12.patch
+    # 0003-qtwebengine-clang16.patch
     patch-qtwebengine-patch-zlib.diff # Backport fix for https://bugreports.qt.io/browse/QTBUG-138486
     patch-qtwebengine-crc32c-arm64.diff
   )
