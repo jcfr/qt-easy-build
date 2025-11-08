@@ -412,7 +412,7 @@ then
       --depth 1 \
       --shallow-submodules \
       --filter=blob:none \
-      https://github.com/qt/qtwebengine.git -b v5.15.18-lts-lgpl qtwebengine
+      https://github.com/qt/qtwebengine.git -b v5.15.19-lts qtwebengine
     echo "Found $patch_count patches"
     git apply --ignore-whitespace $script_dir/patches/*.patch
   fi
