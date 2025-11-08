@@ -416,7 +416,7 @@ then
 
   qtwebengine_patches=(
     # 0002-qtwebengine-ninja1.12.patch
-    # 0003-qtwebengine-clang16.patch
+    0003-qtwebengine-clang16.patch
     patch-qtwebengine-patch-zlib.diff # Backport fix for https://bugreports.qt.io/browse/QTBUG-138486
     patch-qtwebengine-crc32c-arm64.diff
   )
