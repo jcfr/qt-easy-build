@@ -390,11 +390,49 @@ if [[ ! -d $src_dir ]]
 then
   tar --no-same-owner -xf $deps_dir/$qt_archive
 
+  # Collect patches
+  # - Adapted in part from https://github.com/macports/macports-ports/tree/master/aqua/qt5/files
+  patches=(
+    0004-qtbase-tahoe-no-agl-framework.patch
+
+    # TODO: remove when updating to 5.15.19
+    CVE-2025-4211-qtbase-5.15.diff
+    CVE-2025-5455-qtbase-5.15.patch
+    CVE-2025-30348-qtbase-5.15.diff
+    CVE-2025-23050-qtconnectivity-5.15.diff
+  )
+  qtlocation_patches=(
+    0001-qtlocation-clang16.patch
+    patch-qtlocation-mbgl-unique_any.hpp.diff
+    patch-qtlocation-narrowing-const-reference.diff # https://trac.macports.org/ticket/73016
+  )
+
+  qtwebengine_patches=(
+    0002-qtwebengine-ninja1.12.patch
+    0003-qtwebengine-clang16.patch
+    patch-qtwebengine-patch-zlib.diff # Backport fix for https://bugreports.qt.io/browse/QTBUG-138486
+    patch-qtwebengine-crc32c-arm64.diff
+  )
+
+  if [ "$(uname)" == "Darwin" ]
+  then
+    qtwebengine_patches+=(
+      patch-qtwebengine-libc++19.diff
+      patch-qtwebengine-src_3rdparty_chromium_third__party_perfetto_include_perfetto_tracing_internal_track__event__data__source.h.diff
+      patch-qtwebengine-src_3rdparty_chromium_third__party_blink_renderer_platform_wtf_hash__table.h.diff
+    )
+  fi
+
   # Apply patches
   pushd $src_dir
-  patch_count=`ls -1 $script_dir/patches/*.patch 2>/dev/null | wc -l`
-  if [ $patch_count != 0 ]
+
+  qtlocation_patch_count=${#qtlocation_patches[@]}
+  echo "Found $qtlocation_patch_count qtlocation patches"
+
+  if [ $qtlocation_patch_count != 0 ]
   then
+    echo "Found $qtwebengine_patch_count qtlocation patches"
+
     echo "Cloning qtlocation so that patches can be applied with git"
     rm -r qtlocation
     git clone \
@@ -404,6 +442,18 @@ then
       --shallow-submodules \
       --filter=blob:none \
       https://github.com/qt/qtlocation.git -b v5.15.18-lts-lgpl qtlocation
+
+    for patch_file in "${qtlocation_patches[@]}"; do
+      echo "Applying $patch_file"
+      git apply --ignore-whitespace $script_dir/patches/${patch_file}
+    done
+  fi
+
+  qtwebengine_patch_count=${#qtwebengine_patches[@]}
+  echo "Found $qtwebengine_patch_count qtwebengine patches"
+
+  if [ $qtwebengine_patch_count != 0 ]
+  then
     echo "Cloning qtwebengine so that patches can be applied with git"
     rm -r qtwebengine
     git clone \
@@ -413,9 +463,22 @@ then
       --shallow-submodules \
       --filter=blob:none \
       https://github.com/qt/qtwebengine.git -b v5.15.19-lts qtwebengine
-    echo "Found $patch_count patches"
-    git apply --ignore-whitespace $script_dir/patches/*.patch
+
+    for patch_file in "${qtwebengine_patches[@]}"; do
+      echo "Applying $patch_file"
+      git apply --ignore-whitespace $script_dir/patches/${patch_file}
+    done
+
   fi
+
+  patch_count=${#patches[@]}
+  echo "Found $patch_count patches"
+
+  for patch_file in "${patches[@]}"; do
+      echo "Applying $patch_file"
+    git apply --ignore-whitespace $script_dir/patches/${patch_file}
+  done
+
   popd
 
 fi
