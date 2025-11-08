@@ -339,6 +339,7 @@ then
   tar --no-same-owner -xf $openssl_archive
 fi
 cd openssl-$OPENSSL_VERSION/
+LDFLAGS="-Wl,-headerpad_max_install_names" \
 ./config zlib -I$cwd/zlib-install/include -L$cwd/zlib-install/lib shared
 make -j 1 build_libs
 # If MacOS, install openssl libraries
