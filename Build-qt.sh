@@ -407,6 +407,13 @@ then
     patch-qtlocation-narrowing-const-reference.diff # https://trac.macports.org/ticket/73016
   )
 
+  if [ "$(uname)" == "Darwin" ]
+  then
+    qtlocation_patches+=(
+      patch-boost-clang16-cpp17-compat.diff
+    )
+  fi
+
   qtwebengine_patches=(
     # 0002-qtwebengine-ninja1.12.patch
     # 0003-qtwebengine-clang16.patch
