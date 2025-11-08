@@ -1,5 +1,5 @@
---- qtwebengine/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h.orig	2024-08-13 14:59:47 UTC
-+++ qtwebengine/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h
+--- a/qtwebengine/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h	2024-08-13 14:59:47 UTC
++++ b/qtwebengine/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h
 @@ -1786,7 +1786,7 @@ HashTable<Key, Value, Extractor, HashFunctions, Traits
      }
    }

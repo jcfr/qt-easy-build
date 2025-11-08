@@ -5,8 +5,8 @@ Fixes:
 
 error: always_inline function 'vmull_p64' requires target feature 'aes', but would be inlined into function 'ExtendArm64' that is compiled without support for 'aes'
 
---- qtwebengine/src/3rdparty/chromium/third_party/crc32c/BUILD.gn.orig	2025-04-23 12:00:55
-+++ qtwebengine/src/3rdparty/chromium/third_party/crc32c/BUILD.gn	2025-09-22 22:17:28
+--- a/qtwebengine/src/3rdparty/chromium/third_party/crc32c/BUILD.gn	2025-04-23 12:00:55
++++ b/qtwebengine/src/3rdparty/chromium/third_party/crc32c/BUILD.gn	2025-09-22 22:17:28
 @@ -122,6 +122,10 @@
          "-target-feature",
          "-Xclang",
