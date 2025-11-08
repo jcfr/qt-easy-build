@@ -1,6 +1,6 @@
 Apply patch from Gentoo bug tracker (https://bugs.gentoo.org/936486) to fix build.
---- qtlocation/src/3rdparty/mapbox-gl-native/src/mbgl/layout/symbol_projection.cpp.orig
-+++ qtlocation/src/3rdparty/mapbox-gl-native/src/mbgl/layout/symbol_projection.cpp
+--- a/qtlocation/src/3rdparty/mapbox-gl-native/src/mbgl/layout/symbol_projection.cpp
++++ b/qtlocation/src/3rdparty/mapbox-gl-native/src/mbgl/layout/symbol_projection.cpp
 @@ -95,7 +95,7 @@ namespace mbgl {
      PointAndCameraDistance project(const Point<float>& point, const mat4& matrix) {
          vec4 pos = {{ point.x, point.y, 0, 1 }};

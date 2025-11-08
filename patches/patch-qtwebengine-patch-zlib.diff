@@ -25,10 +25,10 @@ Reviewed-by: Michael Brüning <michael.bruning@qt.io>
  chromium/third_party/zlib/zutil.h | 23 +----------------------
  1 file changed, 1 insertion(+), 22 deletions(-)
 
-diff --git a/chromium/third_party/zlib/zutil.h b/chromium/third_party/zlib/zutil.h
+diff --git a/qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h b/qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h
 index 6980a5f4ea34464e38040e5cfad5443b6f3684a4..2e2f57665bba81636d27f6fcc7797f424382d1bf 100644
---- qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h.orig
-+++ qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h
+--- a/qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h
++++ b/qtwebengine/src/3rdparty/chromium/third_party/zlib/zutil.h
 @@ -152,17 +152,8 @@ extern z_const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
  #  endif
  #endif
