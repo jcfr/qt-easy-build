@@ -445,7 +445,7 @@ then
 
     for patch_file in "${qtlocation_patches[@]}"; do
       echo "Applying $patch_file"
-      git apply --ignore-whitespace $script_dir/patches/${patch_file}
+      git apply --verbose --ignore-whitespace $script_dir/patches/${patch_file}
     done
   fi
 
@@ -466,7 +466,7 @@ then
 
     for patch_file in "${qtwebengine_patches[@]}"; do
       echo "Applying $patch_file"
-      git apply --ignore-whitespace $script_dir/patches/${patch_file}
+      git apply --verbose --ignore-whitespace $script_dir/patches/${patch_file}
     done
 
   fi
@@ -476,7 +476,7 @@ then
 
   for patch_file in "${patches[@]}"; do
       echo "Applying $patch_file"
-    git apply --ignore-whitespace $script_dir/patches/${patch_file}
+    git apply --verbose --ignore-whitespace $script_dir/patches/${patch_file}
   done
 
   popd
